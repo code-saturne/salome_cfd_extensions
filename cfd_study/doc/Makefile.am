@@ -22,8 +22,33 @@
 
 #-------------------------------------------------------------------------------
 
-if HAVE_SPHINX
-SPHINX_SUBDIRS = doc
-endif
+include $(top_srcdir)/config/salome_module.mk
 
-SUBDIRS = idl resources src $(SPHINX_SUBDIRS)
+MODULE_NAME = CFDSTUDY
+
+RSTFILES = \
+index.rst \
+intro.rst \
+tutorial/saturne.rst \
+tutorials.rst
+
+SPHINXBUILD = sphinx-build
+SPHINXOPTS = -d .doctrees $(srcdir)
+
+EXTRA_DIST = images tutorial conf.py index.rst intro.rst tutorials.rst
+
+html-local:
+	$(SPHINXBUILD) -b html $(SPHINXOPTS) html
+
+latex:
+	$(SPHINXBUILD) -b latex $(SPHINXOPTS) latex
+
+clean-local:
+	-rm -rf html latex .doctrees
+
+install-data-local:
+	$(MKDIR_P) $(DESTDIR)$(salomedocdir)
+	if test -d "html"; then cp -rf html/* $(DESTDIR)$(salomedocdir); fi;
+
+uninstall-local:
+	-rm -rf $(DESTDIR)$(salomedocdir)/*
