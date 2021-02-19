@@ -43,6 +43,12 @@ It is strongly recommended to build ouside the source tree (i.e. run
 `configure` from outside the source tree, in a dedicated build directory),
 and in-tree builds are not supported.
 
+The path of a matching installation of code_saturne should be
+specified using the `CS_ROOT_DIR` variable, either
+specified when running `configure`, or defined as an environement
+variable at runtime. If both methods are used, the environment
+variable has priority over the initial configuratio setting.
+
 To obtain available options, run `configure --help`
 
 Code_Saturne support: saturne-support@edf.fr

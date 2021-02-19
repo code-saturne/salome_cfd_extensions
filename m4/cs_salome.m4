@@ -139,7 +139,6 @@ if test x$with_salome != xno ; then
   # with the sourced environment and PATH rather than $PYTHON here.
 
   if test "x$SALOMEENVCMD" != "x" ; then
-
     if test "x$OMNIIDLPYTHONPATH" = "x"; then
      OMNIIDLPYTHONPATH=$(/bin/bash $SALOMEENVCMD ; python -B "$srcdir/config/cs_config_test.py" pythonpath_filter _omniidlmodule.so _omniidlmodule.so)
     fi

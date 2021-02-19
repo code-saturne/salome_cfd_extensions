@@ -2,7 +2,7 @@
 
 #-------------------------------------------------------------------------------
 
-# This file is part of Code_Saturne, a general-purpose CFD tool.
+# This file is part of code_saturne, a general-purpose CFD tool.
 #
 # Copyright (C) 1998-2021 EDF S.A.
 #
@@ -28,7 +28,7 @@
 
 m4_define([cs_licence_c_comment],
 [/*
-  This file is part of Code_Saturne, a general-purpose CFD tool.
+  This file is part of code_saturne, a general-purpose CFD tool.
 
   Copyright (C) 1998-2021 EDF S.A.
 
@@ -50,8 +50,12 @@ m4_define([cs_licence_c_comment],
 # Note: proper determination of the version string requires the parent NEWS file
 #       to be maintained properly (as it should be anyways).
 
+m4_define([salome_cfd_major_version], [7])
+m4_define([salome_cfd_minor_version], [1])
+m4_define([salome_cfd_release_version], [0])
+m4_define([salome_cfd_version_extra], [alpha])
 m4_define([salome_cfd_version_string],
-          [m4_normalize(esyscmd([../build-aux/cs_version.py]))])
+          [salome_cfd_major_version.salome_cfd_minor_version.salome_cfd_release_version@&t@salome_cfd_version_extra])
 
 AC_INIT([salome_cfd],[salome_cfd_version_string],[saturne-support@edf.fr],[],[https://code-saturne.org])
 AC_CONFIG_SRCDIR([cfd_study/src/CFDSTUDY/CFDSTUDY.py])
@@ -118,25 +122,6 @@ AC_ARG_ENABLE(debug,
 )
 AC_SUBST(debug)
 
-# Optionally install the code with relocatable features
-
-AC_ARG_ENABLE(relocatable,
-  [AS_HELP_STRING([--enable-relocatable], [enable relocatable installation])],
-  [
-    case "${enableval}" in
-      yes) relocatable=yes ;;
-      no)  relocatable=no ;;
-      *)   AC_MSG_ERROR([bad value ${enableval} for --enable-relocatable]) ;;
-    esac
-  ],
-  [ relocatable=no ]
-)
-AC_SUBST(relocatable)
-AM_CONDITIONAL(HAVE_RELOCATABLE, [test "${relocatable}" = yes])
-if test "${relocatable}" = yes ; then
-  AC_DEFINE([HAVE_RELOCATABLE], 1, [Relocatable installation])
-fi
-
 # Preprocessor flags for debugging purposes
 
 if test "x$debug" = "xyes"; then
@@ -164,7 +149,6 @@ AC_C_INLINE
 AC_TYPE_SIZE_T
 AC_TYPE_PID_T
 
-AC_HEADER_TIME
 AC_HEADER_STDBOOL
 
 #------------------------------------------------------------------------------
@@ -251,7 +235,7 @@ AM_CONDITIONAL(HAVE_QT5, [test "x$salome_cfd_have_gui_qt5" = "xyes"])
 AC_SUBST(salome_cfd_have_gui_qt5)
 
 #------------------------------------------------------------------------------
-# Checks for documantation tools
+# Checks for documentation tools
 #------------------------------------------------------------------------------
 
 salome_cfd_have_sphinx=yes
@@ -267,6 +251,18 @@ fi
 
 AM_CONDITIONAL(HAVE_SPHINX, [test $salome_cfd_have_sphinx = yes])
 AC_SUBST(salome_cfd_have_sphinx)
+
+#------------------------------------------------------------------------------
+# Checks for code_saturne path
+#------------------------------------------------------------------------------
+
+AC_ARG_VAR([CS_ROOT_DIR], [specify code_saturne root directory])
+
+if test "x$CS_ROOT_DIR" != "x" ; then
+  if test ! -d "$CS_ROOT_DIR" ; then
+    AC_MSG_WARN([directory specified by CS_ROOT_DIR does not exist])
+  fi
+fi
 
 #------------------------------------------------------------------------------
 # Pass compiler options to automake file

@@ -53,43 +53,46 @@ class config:
 
         # Installation directories
 
-        self.relocatable = "@relocatable@"
+        self.cs_root_dir = "@cs_root_dir@"
         self.dirs = {'prefix': ("", "@prefix@"),
                      'pythondir': (os.path.join("lib",
                                                 "python" + sys.version[:3],
                                                 "site-packages"),
                                    "@pythondir@"),
-                     'pkgpythondir': (os.path.join("lib",
-                                                   "python" + sys.version[:3],
-                                                   "site-packages",
-                                                   "code_saturne"),
-                                      "@pkgpythondir@"),
                      'docdir': (os.path.join("share", "doc", "code_saturne"),
                                 "@docdir@")}
 
 #-------------------------------------------------------------------------------
 
-    def get_dir(self, installdir):
+    def get_prefix(self):
 
-        # First, handle the standard "non relocatable" case
-        if self.relocatable == "no":
-            return self.dirs[installdir][1]
+        prefix = os.getenv('CFDMODULE_ROOT_DIR')
 
-        # Second, check if CS_ROOT_DIR is set
-        prefix = os.getenv('CS_ROOT_DIR')
-
-        # Third, assume that SALOME is being used
-        if prefix == None:
-            prefix = os.getenv('CFDMODULE_ROOT_DIR')
-
-        # Finally, assume that the standard tree structure is used
+        # If no variable is defined, assume hat the standard tree structure is used
         if prefix == None:
             prefix = os.path.dirname(os.path.realpath(__file__))
-            i = prefix.find(self.dirs['pythondir'][0])
-            if i > -1:
-                prefix = os.path.dirname(prefix[:i+1])
+            prefix = os.path.split(prefix)[0]
 
-        return os.path.join(prefix, self.dirs[installdir][0])
+        return prefix
+
+#-------------------------------------------------------------------------------
+
+    def get_python_dirs(self, prefix):
+
+        dirs = os.path.join(prefix, self.dirs['pythondir'][0])
+
+        pkgpythondir = os.path.join(dirs, 'salome')
+        dirs += ':' + pkgpythondir
+
+        # Second, check if CS_ROOT_DIR is set
+        cs_root_dir = os.getenv('CS_ROOT_DIR')
+        if cs_root_dir == None:
+            cs_root_dir = self.cs_root_dir
+
+        if cs_root_dir != prefix and cs_root_dir:
+            dirs += ':' + os.path.join(cs_root_dir, self.dirs['pythondir'][0])
+
+        return dirs
 
 #-------------------------------------------------------------------------------
 
@@ -267,7 +270,7 @@ def main(argv):
 
     template = """\
 CFDSTUDY_ROOT_DIR=%(prefix)s
-PYTHONPATH=%(pythondir)s/salome:%(pkgpythondir)s${PYTHONPATH:+:$PYTHONPATH}
+PYTHONPATH=%(pythondirs)s${PYTHONPATH:+:$PYTHONPATH}
 export CFDSTUDY_ROOT_DIR PYTHONPATH
 export SALOME_PLEASE_SETUP_ENVIRONMENT_AS_BEFORE=1
 %(runsalome)s --modules=%(modules)s
@@ -275,14 +278,10 @@ export SALOME_PLEASE_SETUP_ENVIRONMENT_AS_BEFORE=1
 
     default_modules = "GEOM,SHAPER,SMESH,FIELDS,CFDSTUDY,PARAVIS,YACS,JOBMANAGER,HOMARD,OPENTURNS"
 
-    path = cfg.get_dir('pkgpythondir')
-    path = path+":"+cfg.get_dir('pythondir')
-
-    prefix = cfg.get_dir('prefix')
-    pythondir = cfg.get_dir('pythondir')
+    prefix = cfg.get_prefix()
+    pythondirs = cfg.get_python_dirs(prefix)
     cmd = template % {'prefix': prefix,
-                      'pythondir': pythondir,
-                      'pkgpythondir': path,
+                      'pythondirs': pythondirs,
                       'runsalome': run_cmd,
                       'modules': default_modules}
 

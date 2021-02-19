@@ -74,11 +74,7 @@ config/salome_module.mk
 DISTCLEANFILES = \
 bin/salome_cfd
 
-if HAVE_RELOCATABLE
-  PYTHON_SHEBANG = /usr/bin/env python3
-else
-  PYTHON_SHEBANG = $(PYTHON)
-endif
+PYTHON_SHEBANG = /usr/bin/env python3
 
 # Replace paths in Python scripts.
 # The following command and target is adapted from an example in
@@ -92,9 +88,8 @@ edit_package = sed \
 	-e 's|@PYTHON[@]|$(PYTHON_SHEBANG)|g' \
 	-e 's|@prefix[@]|$(prefix)|g' \
 	-e 's|@pythondir[@]|$(pythondir)|g' \
-	-e 's|@pkgpythondir[@]|$(pkgpythondir)|g' \
 	-e 's|@docdir[@]|$(docdir)|g' \
-	-e 's|@relocatable[@]|$(relocatable)|g'
+	-e 's|@cs_root_dir[@]|$(CS_ROOT_DIR)|g'
 
 # Install Python library
 

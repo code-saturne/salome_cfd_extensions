@@ -31,11 +31,11 @@ AC_REQUIRE([AC_PROG_CXX])dnl
 AC_REQUIRE([AC_PROG_CPP])dnl
 AC_REQUIRE([AC_PROG_CXXCPP])dnl
 
-AC_CHECKING(for omniORB)
+AC_MSG_NOTICE(for omniORB)
 omniORB_ok=yes
 
 AC_LANG_SAVE
-AC_LANG_CPLUSPLUS
+AC_LANG([C++])
 
 AC_ARG_VAR([OMNIIDL], [the omniORB IDL compiler])
 AC_PATH_PROG([OMNIIDL], [omniidl])
@@ -81,22 +81,12 @@ then
 
   OMNIORB_CXXFLAGS="-DOMNIORB_VERSION=$OMNIORB_VERSION"
   case $build_cpu in
-    sparc*)
-      # AC_DEFINE(__sparc__)
-      OMNIORB_CXXFLAGS="$OMNIORB_CXXFLAGS -D__sparc__"
-      ;;
    *86*)
       # AC_DEFINE(__x86__)
       OMNIORB_CXXFLAGS="$OMNIORB_CXXFLAGS -D__x86__"
       ;;
   esac
   case $build_os in
-    solaris*)
-      # AC_DEFINE(__sunos__)
-      __OSVERSION__=5
-      AC_DEFINE([__OSVERSION__], [5], [OmniORB OS version])
-      OMNIORB_CXXFLAGS="$OMNIORB_CXXFLAGS -D__sunos__"
-      ;;
     mingw*)
       # AC_DEFINE(__WIN32__)
       __OSVERSION__=4
@@ -144,12 +134,11 @@ then
   CXXFLAGS="$CXXFLAGS $OMNIORB_CXXFLAGS $OMNIORB_INCLUDES"
 
   AC_MSG_CHECKING(whether we can link with omnithreads)
-  AC_CACHE_VAL(salome_cv_lib_omnithreads,[
-    AC_TRY_LINK(
-#include <omnithread.h>
-,   omni_mutex my_mutex,
-    eval "salome_cv_lib_omnithreads=yes",eval "salome_cv_lib_omnithreads=no")
-  ])
+  AC_LINK_IFELSE([AC_LANG_PROGRAM(
+[[#include <omnithread.h>]],
+[[omni_mutex my_mutex;]])],
+                   [ salome_cv_lib_omnithreads=yes ],
+                   [ salome_cv_lib_omnithreads=no ], )
 
   omniORB_ok="$salome_cv_lib_omnithreads"
   if  test "x$omniORB_ok" = "xno"
@@ -191,12 +180,11 @@ then
   CXXFLAGS="$CXXFLAGS $OMNIORB_CXXFLAGS $OMNIORB_INCLUDES"
 
   AC_MSG_CHECKING(whether we can link with omniORB)
-  AC_CACHE_VAL(salome_cv_lib_omniorb,[
-    AC_TRY_LINK(
-#include <CORBA.h>
-,   CORBA::ORB_var orb,
-    eval "salome_cv_lib_omniorb3=yes",eval "salome_cv_lib_omniorb3=no")
-  ])
+  AC_LINK_IFELSE([AC_LANG_PROGRAM(
+[[#include <CORBA.h>]],
+[[CORBA::ORB_var orb;]])],
+                   [ salome_cv_lib_omniorb3=yes ],
+                   [ salome_cv_lib_omniorb3=no ], )
   omniORB_ok="$salome_cv_lib_omniorb3"
 
   omniORB_ok=yes
@@ -277,9 +265,6 @@ dnl AC_LANG_RESTORE
 
 AC_MSG_RESULT(for omniORBpy: $omniORBpy_ok)
 AC_MSG_RESULT(for omniORB: $omniORB_ok)
-
-# Save cache
-AC_CACHE_SAVE
 
 if test "x$omniORB_ok" = "xyes"
 then
