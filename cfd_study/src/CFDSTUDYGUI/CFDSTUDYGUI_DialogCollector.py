@@ -59,7 +59,7 @@ from ui_ECSConversionDialog   import Ui_ECSConversionDialog
 from ui_GUIActivationDialog   import Ui_GUIActivationDialog
 import CFDSTUDYGUI_DataModel
 import CFDSTUDYGUI_Commons
-from CFDSTUDYGUI_Commons import _SetCFDCode, CFD_Code, sgPyQt
+from CFDSTUDYGUI_Commons import _SetCFDCode, CFD_Code, getCFDSolverName, sgPyQt
 from CFDSTUDYGUI_Commons import CFD_Saturne, CFD_Neptune, CheckCFD_CodeEnv
 from CFDSTUDYGUI_Message import cfdstudyMess
 #-------------------------------------------------------------------------------
@@ -116,31 +116,32 @@ class InfoDialogHandler(InfoDialog):
 
 
     def setCode(self, env_saturne, env_neptune):
+
+        from code_saturne.cs_package import package
+
         if env_neptune:
             code = CFD_Neptune
-            from neptune_cfd.nc_package import package
-
         elif env_saturne:
             code = CFD_Saturne
-            from code_saturne.cs_package import package
-
         else:
             raise ValueError("Invalid CFD_Code in InfoDialog class")
 
-        pkg = package()
+        _solver_name = getCFDSolverName(code)
+        pkg = package(name = _solver_name)
+
         self.labelVersionValue.setText(pkg.version)
         self.labelPrefixValue.setText(pkg.get_dir('prefix'))
         self.labelCodeValue.setText(pkg.name)
+
         _SetCFDCode(code)
 
 
     def update(self, code):
-        if code == CFD_Saturne:
-            from code_saturne.cs_package import package
-        if code == CFD_Neptune:
-            from neptune_cfd.nc_package import package
+        from code_saturne.cs_package import package
 
-        pkg = package()
+        _solver_name = getCFDSolverName(code)
+        pkg = package(name = _solver_name)
+
         self.labelVersionValue.setText(pkg.version)
         self.labelPrefixValue.setText(pkg.get_dir('prefix'))
         self.labelCodeValue.setText(pkg.name)

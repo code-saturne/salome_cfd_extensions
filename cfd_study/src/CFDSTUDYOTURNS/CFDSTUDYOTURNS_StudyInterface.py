@@ -231,17 +231,14 @@ class cfd_openturns_study:
         """
         Setting the package according to the requested code by the user
         """
+        from code_saturne.cs_package import package
 
         pkg_name = self.cfg.get('study_parameters', 'code_name')
 
-        if pkg_name == 'code_saturne':
-            from code_saturne.cs_package import package
-        elif pkg_name == 'neptune_cfd':
-            from neptune_cfd.nc_package import package
-        else:
+        if pkg_name not in ['code_saturne', 'neptune_cfd']:
             raise Exception("Uknown package: "+pkg_name)
 
-        self.pkg = package()
+        self.pkg = package(name = pkg_name)
 
     # ---------------------------------------
 

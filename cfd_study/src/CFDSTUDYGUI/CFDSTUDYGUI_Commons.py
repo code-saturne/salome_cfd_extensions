@@ -59,6 +59,9 @@ sg = libSALOME_Swig.SALOMEGUI_Swig()
 CFD_Saturne = "Code_Saturne"
 CFD_Neptune = "NEPTUNE_CFD"
 
+_CFD_solvers = {CFD_Saturne:'code_saturne',
+                CFD_Neptune:'neptune_cfd'}
+
 # ObjectTR is a convenient object for traduction purpose
 ObjectTR = QObject()
 
@@ -93,6 +96,20 @@ def CFD_Code():
     global _CFD_Code
     return _CFD_Code
 
+def getCFDSolverName(code_name=None):
+    """
+    Get cfd solver name.
+    If 'code_name' is not provided, default value (CFD_Code()) is used.
+    """
+    solver_name = None
+
+    if code_name == None:
+        code_name = CFD_Code()
+
+    if code_name in _CFD_solvers.keys():
+        solver_name = CFD_solvers[code_name]
+
+    return solver_name
 
 def _SetCFDCode(var):
     log.debug("_SetCFDCode : var = %s" % var)
@@ -135,33 +152,34 @@ def CheckCFD_CodeEnv(code):
         iok= False
         return iok,mess
 
-    if code == CFD_Saturne:
+    else:
+        iok = False
+        _solver_name = getCFDSolverName(code);
         try:
             from code_saturne.cs_package import package
-            iok = True
-        except ImportError as e:
+            pkg = package(name = _solver_name)
+            b = os.path.join(pkg.get_dir('bindir'),
+                             _solver_name+pkg.config.shext)
+            if os.path.isfile(b):
+                iok = True
+            else:
+                mess = cfdstudyMess.trMessage(ObjectTR.tr("INFO_DLG_INVALID_ENV"),[code]) + e.__str__()
+                mess = mess + cfdstudyMess.trMessage(ObjectTR.tr("CHECK_CODE_INSTALLATION"),[_solver_name,code])
+
+        except:
             mess = cfdstudyMess.trMessage(ObjectTR.tr("INFO_DLG_INVALID_ENV"),[code]) + e.__str__()
             if "cs_package" in e.__str__():
                 mess = mess + cfdstudyMess.trMessage(ObjectTR.tr("CHECK_CODE_PACKAGE"),["cs_package",code])
-            elif "code_saturne" in e.__str__():
-                mess = mess + cfdstudyMess.trMessage(ObjectTR.tr("CHECK_PYTHON_PATH"),[])
-            iok = False
-    elif code == CFD_Neptune:
-        try:
-            from neptune_cfd.nc_package import package
-            iok = True
-        except ImportError as e:
-            mess = cfdstudyMess.trMessage(ObjectTR.tr("INFO_DLG_INVALID_ENV"),[code]) + e.__str__()
-            if "nc_package" in e.__str__():
-                mess = mess + cfdstudyMess.trMessage(ObjectTR.tr("CHECK_CODE_PACKAGE"),["nc_package",code])
-            elif "neptune_cfd" in e.__str__():
-                mess = mess + cfdstudyMess.trMessage(ObjectTR.tr("CHECK_PYTHON_PATH"),[])
-            iok = False
+            elif _solver_name in e.__str__():
+                mess = mess + cfdstudyMess.trMessage(ObjectTR.tr("CHECK_CODE_PACKAGE"),[_solver_name,code])
+
+
     else:
         raise ValueError("Invalid name of solver!")
 
     if iok:
-        pkg = package()
+        _solver_name = getCFDSolverName(code);
+        pkg = package(name = _solver_name)
         prefix = pkg.get_dir('prefix')
         log.debug("CheckCFD_CodeEnv -> prefix = %s" % (prefix))
 
@@ -187,16 +205,16 @@ def BinCode():
     mess = ""
     # default package is code_saturne (for convert...)
     from code_saturne.cs_package import package
-    pkg = package()
 
-    if CFD_Code() == CFD_Saturne:
-        bindir = pkg.get_dir('bindir')
-        b = os.path.join(bindir, "code_saturne")
-    elif CFD_Code() == CFD_Neptune:
-        from neptune_cfd.nc_package import package
-        pkg = package()
-        bindir = pkg.get_dir('bindir')
-        b = os.path.join(bindir, "neptune_cfd")
+    try:
+        _solver_name = getCFDSolverName()
+    except:
+        raise Exception("Uknown CFD solver: '%s'" % str(CFD_code()))
+
+    pkg = package(name=_solver_name)
+
+    b = os.path.join(pkg.get_dir('bindir'),
+                     _solver_name+pkg.config.shext)
     c = pkg.get_preprocessor()
     log.debug("BinCode -> \n    %s\n    %s" % (b, c))
     return b, c, mess

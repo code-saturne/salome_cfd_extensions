@@ -914,9 +914,12 @@ class CFDSTUDYGUI_ActionsHandler(QObject):
             if a != SolverFileMenu and a != SolverToolsMenu and a != SolverHelpMenu:
                 self.solverAction(a).setEnabled(isActivatedView)
 
-        try:
-            from neptune_cfd.nc_package import package
-        except:
+        from code_saturne.cs_package import package
+        pkg = package(name='neptune_cfd')
+        bin_ncfd = os.path.join(pkg.get_dir('bindir'),
+                                'neptune_cfd'+pkg.config.shext)
+
+        if not os.path.isfile(bin_ncfd):
             self.solverAction(NCSolverHelpUserGuide).setEnabled(False)
             self.solverAction(NCSolverHelpTutorial).setEnabled(False)
             self.solverAction(NCSolverHelpTheory).setEnabled(False)

@@ -53,7 +53,7 @@ from code_saturne.Base.QtWidgets import *
 # Application modules
 #-------------------------------------------------------------------------------
 
-from CFDSTUDYGUI_Commons import CFD_Code, CFD_Saturne, CFD_Neptune, sgPyQt, sg
+from CFDSTUDYGUI_Commons import CFD_Code, CFD_Saturne, CFD_Neptune, getCFDSolverName, sgPyQt, sg
 from CFDSTUDYGUI_Commons import LoggingMgr
 import CFDSTUDYGUI_DataModel
 from CFDSTUDYGUI_Management import CFDGUI_Management
@@ -340,27 +340,28 @@ class CFDSTUDYGUI_SolverGUI(QObject):
 
 
     def onNeptuneHelpManual(self):
-        from neptune_cfd.nc_package import package
+        from code_saturne.cs_package import package
         argv_info = ['--guide', 'user']
-        cs_info.main(argv_info, package())
+        cs_info.main(argv_info, package(name='neptune_cfd'))
 
 
     def onNeptuneHelpTutorial(self):
-        from neptune_cfd.nc_package import package
+        from code_saturne.cs_package import package
         argv_info = ['--guide', 'tutorial']
-        cs_info.main(argv_info, package())
+        cs_info.main(argv_info, package(name='neptune_cfd'))
 
 
     def onNeptuneHelpKernel(self):
-        from neptune_cfd.nc_package import package
+        from code_saturne.cs_package import package
         argv_info = ['--guide', 'theory']
-        cs_info.main(argv_info, package())
+        cs_info.main(argv_info, package(name='neptune_cfd'))
 
 
     def onNeptuneHelpDoxygen(self):
+        from code_saturne.cs_package import package
         from neptune_cfd.nc_package import package
         argv_info = ['--guide', 'Doxygen']
-        cs_info.main(argv_info, package())
+        cs_info.main(argv_info, package(name='neptune_cfd'))
 
 
     def setWindowTitle_CFD(self,mw,aCase,baseTitleName):
@@ -379,10 +380,7 @@ class CFDSTUDYGUI_SolverGUI(QObject):
         log.debug("launchGUI")
         from code_saturne.cs_gui import process_cmd_line
         from code_saturne.Base.MainView import MainView
-        if CFD_Code() == CFD_Saturne:
-            from code_saturne.cs_package import package
-        elif CFD_Code() == CFD_Neptune:
-            from neptune_cfd.nc_package import package
+        from code_saturne.cs_package import package
 
         if sobjXML == None:
             Title = "unnamed"
@@ -390,7 +388,11 @@ class CFDSTUDYGUI_SolverGUI(QObject):
             Title = sobjXML.GetName()
 
         self.Workspace = WorkSpace
-        pkg = package()
+
+        # Get current solver name
+        _solver_name = getCFDSolverName()
+        pkg = package(name = _solver_name)
+
         case, splash = process_cmd_line(Args)
         try:
             mw = MainView(pkg, case, aCase)
