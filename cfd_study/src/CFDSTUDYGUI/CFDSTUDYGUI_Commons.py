@@ -107,7 +107,7 @@ def getCFDSolverName(code_name=None):
         code_name = CFD_Code()
 
     if code_name in _CFD_solvers.keys():
-        solver_name = CFD_solvers[code_name]
+        solver_name = _CFD_solvers[code_name]
 
     return solver_name
 
@@ -148,9 +148,10 @@ def CheckCFD_CodeEnv(code):
     bindir = ""
 
     if code not in [CFD_Saturne, CFD_Neptune]:
-        mess = cfdstudyMess.trMessage(ObjectTR.tr("CFDSTUDY_INVALID_SOLVER_NAME"),[code,CFD_Saturne,CFD_Neptune])
+        mess = cfdstudyMess.trMessage(ObjectTR.tr("CFDSTUDY_INVALID_SOLVER_NAME"),
+                                      [code,CFD_Saturne,CFD_Neptune])
         iok= False
-        return iok,mess
+        return iok, mess
 
     else:
         iok = False
@@ -163,19 +164,20 @@ def CheckCFD_CodeEnv(code):
             if os.path.isfile(b):
                 iok = True
             else:
-                mess = cfdstudyMess.trMessage(ObjectTR.tr("INFO_DLG_INVALID_ENV"),[code]) + e.__str__()
-                mess = mess + cfdstudyMess.trMessage(ObjectTR.tr("CHECK_CODE_INSTALLATION"),[_solver_name,code])
+                mess = cfdstudyMess.trMessage(ObjectTR.tr("INFO_DLG_INVALID_ENV"),
+                                              [code]) + e.__str__()
+                mess += cfdstudyMess.trMessage(ObjectTR.tr("CHECK_CODE_INSTALLATION"),
+                                               [_solver_name,code])
 
         except:
-            mess = cfdstudyMess.trMessage(ObjectTR.tr("INFO_DLG_INVALID_ENV"),[code]) + e.__str__()
+            mess = cfdstudyMess.trMessage(ObjectTR.tr("INFO_DLG_INVALID_ENV"),
+                                          [code]) + e.__str__()
             if "cs_package" in e.__str__():
-                mess = mess + cfdstudyMess.trMessage(ObjectTR.tr("CHECK_CODE_PACKAGE"),["cs_package",code])
+                mess += cfdstudyMess.trMessage(ObjectTR.tr("CHECK_CODE_PACKAGE"),
+                                               ["cs_package",code])
             elif _solver_name in e.__str__():
-                mess = mess + cfdstudyMess.trMessage(ObjectTR.tr("CHECK_CODE_PACKAGE"),[_solver_name,code])
-
-
-    else:
-        raise ValueError("Invalid name of solver!")
+                mess += cfdstudyMess.trMessage(ObjectTR.tr("CHECK_CODE_PACKAGE"),
+                                               [_solver_name,code])
 
     if iok:
         _solver_name = getCFDSolverName(code);
@@ -187,11 +189,13 @@ def CheckCFD_CodeEnv(code):
         log.debug("CheckCFD_CodeEnv -> prefix = %s" % (bindir))
 
         if not os.path.exists(prefix):
-            mess = cfdstudyMess.trMessage(ObjectTR.tr("ENV_DLG_INVALID_DIRECTORY"),[prefix])
+            mess = cfdstudyMess.trMessage(ObjectTR.tr("ENV_DLG_INVALID_DIRECTORY"),
+                                          [prefix])
             iok = False
         else:
             if not os.path.exists(bindir):
-                mess = cfdstudyMess.trMessage(ObjectTR.tr("ENV_DLG_INVALID_DIRECTORY"),[bindir])
+                mess = cfdstudyMess.trMessage(ObjectTR.tr("ENV_DLG_INVALID_DIRECTORY"),
+                                              [bindir])
                 iok = False
 
     log.debug("CheckCFD_CodeEnv -> %s = %s" % (code, iok))
