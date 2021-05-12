@@ -489,7 +489,8 @@ class CFDSTUDYGUI_ActionsHandler(QObject):
         self._ActionMap[action_id] = action
         self._CommonActionIdMap[ConvertMeshToMed] = action_id
 
-# popup added toupdate case path with code_saturne create --import-only into case directory files
+        # popup added toupdate case path with code_saturne create --import-only
+        # into case directory files
         action = sgPyQt.createAction(-1,\
                                       ObjectTR.tr("UPDATE_CASE_PATH_ACTION_TEXT"),\
                                       ObjectTR.tr("UPDATE_CASE_PATH_ACTION_TIP"),\
@@ -500,17 +501,7 @@ class CFDSTUDYGUI_ActionsHandler(QObject):
         self._ActionMap[action_id] = action
         self._CommonActionIdMap[UpdateCasePath] = action_id
 
-        #other actions
-        action = sgPyQt.createAction(-1,\
-                                      ObjectTR.tr("CHECK_COMPILATION_ACTION_TEXT"),\
-                                      ObjectTR.tr("CHECK_COMPILATION_ACTION_TIP"),\
-                                      ObjectTR.tr("CHECK_COMPILATION_ACTION_SB"),\
-                                      ObjectTR.tr("CHECK_COMPILATION_ACTION_ICON"))
-        action.triggered.connect(self.slotCheckCompilation)
-        action_id = sgPyQt.actionId(action)
-        self._ActionMap[action_id] = action
-        self._CommonActionIdMap[CheckCompilationAction] = action_id
-
+        # other actions
         action = sgPyQt.createAction(-1,\
                                       ObjectTR.tr("RUN_SCRIPT_ACTION_TEXT"),\
                                       ObjectTR.tr("RUN_SCRIPT_ACTION_TIP"),\
@@ -521,7 +512,7 @@ class CFDSTUDYGUI_ActionsHandler(QObject):
         self._ActionMap[action_id] = action
         self._CommonActionIdMap[RunScriptAction] = action_id
 
-        #syrthes actions
+        # syrthes actions
         action = sgPyQt.createAction(-1,\
                                       ObjectTR.tr("OPEN_SYRTHES-CASE_FILE_ACTION_TEXT"),\
                                       ObjectTR.tr("OPEN_SYRTHES-CASE_FILE_ACTION_TIP"),\
@@ -2005,33 +1996,6 @@ class CFDSTUDYGUI_ActionsHandler(QObject):
             return
         CFDSTUDYGUI_DataModel.updateCasePath(casePath )
 
-    def __compile(self, aCaseObject):
-        """
-        Private method.
-        Build the 'code_saturne compile -t' or the 'neptune_cfd compile -t' command.
-
-        @type theCase: C{SObject}
-        @param theCase: object from the Object Browser.
-        @rtype: C{String}
-        @return: command line
-        """
-        # object of SRC folder
-        cmd = ""
-        aChildList = CFDSTUDYGUI_DataModel.ScanChildren(aCaseObject, "SRC")
-        if not len(aChildList) == 1:
-            raise ValueError("There is a mistake with the SRC directory")
-
-        env_code, mess = CheckCFD_CodeEnv(CFD_Code())
-        if not env_code:
-            cfdstudyMess.aboutMessage(mess)
-        else:
-            b, c,mess = BinCode()
-            if mess == "":
-                cmd = b + " compile -t"
-            else:
-                cfdstudyMess.criticalMessage(mess)
-        return cmd
-
 
     def slotMeshConvertToMed(self):
         """
@@ -2089,32 +2053,6 @@ class CFDSTUDYGUI_ActionsHandler(QObject):
                                                                     [args],
                                                                     sobj.GetFather(),
                                                                     thePath)
-            dlg.show()
-
-
-    def slotCheckCompilation(self):
-        """
-        """
-        #get current selection
-        sobj = self._singleSelectedObject()
-        if sobj == None:
-            return
-
-        # get current case
-        aCase = CFDSTUDYGUI_DataModel.GetCase(sobj)
-        if aCase == None:
-            return
-        cmd = self.__compile(aCase)
-        if cmd != "":
-            aChildList = CFDSTUDYGUI_DataModel.ScanChildren(aCase, "SRC")
-            aSRCObj =  aChildList[0]
-            aSRCPath = CFDSTUDYGUI_DataModel._GetPath(aSRCObj)
-
-            dlg = CFDSTUDYGUI_CommandMgr.CFDSTUDYGUI_QProcessDialog(sgPyQt.getDesktop(),
-                                                                    self.tr("STMSG_CHECK_COMPILATION"),
-                                                                    [cmd],
-                                                                    None,
-                                                                    aSRCPath)
             dlg.show()
 
 

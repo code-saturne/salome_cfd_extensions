@@ -502,14 +502,6 @@
             <translation>Running Code_Saturne</translation>
         </message>
         <message>
-            <source>STMSG_CHECK_COMPILATION</source>
-            <translation>Check compilation</translation>
-        </message>
-        <message>
-            <source>STMSG_COMPILATION</source>
-            <translation>Compilation</translation>
-        </message>
-        <message>
             <source>ENV_DLG_INVALID_DIRECTORY</source>
             <translation>Directory %s does not exists!!! </translation>
         </message>
