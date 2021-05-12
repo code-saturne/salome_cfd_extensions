@@ -68,6 +68,7 @@ from CFDSTUDYGUI_Commons import sg, sgPyQt
 from CFDSTUDYGUI_Commons import CFD_Saturne, CFD_Neptune
 from CFDSTUDYGUI_Commons import CheckCFD_CodeEnv
 from CFDSTUDYGUI_Message import cfdstudyMess
+
 #-------------------------------------------------------------------------------
 # log config
 #-------------------------------------------------------------------------------
@@ -212,34 +213,21 @@ def activate():
 
     ActionHandler = _DesktopMgr.getActionHandler(dsk)
 
-    env_saturne, mess1 = CheckCFD_CodeEnv(CFD_Saturne)
-    env_neptune, mess2 = CheckCFD_CodeEnv(CFD_Neptune)
+    env_saturne, msg = CheckCFD_CodeEnv(CFD_Saturne)
 
     log.debug("activate -> env_saturne = %s" % env_saturne)
-    log.debug("activate -> env_neptune = %s" % env_neptune)
 
-    if not env_saturne and not env_neptune:
+    if not env_saturne:
         QMessageBox.critical(ActionHandler.dskAgent().workspace(),
-                             "Error", mess1, QMessageBox.Ok, 0)
-        QMessageBox.critical(ActionHandler.dskAgent().workspace(),
-                             "Error", mess2, QMessageBox.Ok, 0)
+                             "Error", msg, QMessageBox.Ok, 0)
         return False
 
-    if env_neptune:
-        if mess2 != "":
-            mess = cfdstudyMess.trMessage(ObjectTR.tr("CFDSTUDY_INVALID_ENV"),[]) + " ; "+ mess2
-            cfdstudyMess.aboutMessage(mess)
-            return False
-        else:
-            ActionHandler.DialogCollector.InfoDialog.setCode(env_saturne, env_neptune)
-
-    elif env_saturne:
-        if mess1 != "":
-            mess = cfdstudyMess.trMessage(ObjectTR.tr("CFDSTUDY_INVALID_ENV"),[]) + " ; "+ mess2
-            cfdstudyMess.aboutMessage(mess)
-            return False
-        else:
-            ActionHandler.DialogCollector.InfoDialog.setCode(env_saturne, False)
+    if msg != "":
+        mess = cfdstudyMess.trMessage(ObjectTR.tr("CFDSTUDY_INVALID_ENV"),[]) + " ; "+ msg
+        cfdstudyMess.aboutMessage(msg)
+        return False
+    else:
+        ActionHandler.DialogCollector.InfoDialog.setCode(env_saturne)
 
     ActionHandler._SalomeSelection.currentSelectionChanged.connect(ActionHandler.updateActions)
 
@@ -257,11 +245,6 @@ def activate():
         if dockTitle in ("Python Console", "Console Python",  "Message Window"):
             dock.setVisible(False)
             dock.hide()
-#MP Analyser si on peut faire expand sur les case dans OB
-#    ob = sgPyQt.getObjectBrowser()
-#    if ob != None:
-#        ob.expandAll()
-#        ob.expandToDepth(2)
     return True
 
 

@@ -132,7 +132,7 @@ def LogModeOff():
     _LogModeOn = False
 
 
-# check for avalable type of solver
+# check for available type of solver
 
 def CheckCFD_CodeEnv(code):
     """

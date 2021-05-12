@@ -59,7 +59,7 @@ from ui_ECSConversionDialog   import Ui_ECSConversionDialog
 from ui_GUIActivationDialog   import Ui_GUIActivationDialog
 import CFDSTUDYGUI_DataModel
 import CFDSTUDYGUI_Commons
-from CFDSTUDYGUI_Commons import _SetCFDCode, CFD_Code, getCFDSolverName, sgPyQt
+from CFDSTUDYGUI_Commons import CFD_Code, getCFDSolverName, sgPyQt
 from CFDSTUDYGUI_Commons import CFD_Saturne, CFD_Neptune, CheckCFD_CodeEnv
 from CFDSTUDYGUI_Message import cfdstudyMess
 #-------------------------------------------------------------------------------
@@ -115,28 +115,15 @@ class InfoDialogHandler(InfoDialog):
             cfdstudyMess.criticalMessage(mess)
 
 
-    def setCode(self, env_saturne, env_neptune):
+    def setCode(self, env_saturne):
 
         from code_saturne.cs_package import package
 
-        if env_neptune:
-            code = CFD_Neptune
-        elif env_saturne:
-            code = CFD_Saturne
-        else:
-            raise ValueError("Invalid CFD_Code in InfoDialog class")
-
-        _solver_name = getCFDSolverName(code)
-        pkg = package(name = _solver_name)
+        pkg = package()
 
         self.labelVersionValue.setText(pkg.version)
         self.labelPrefixValue.setText(pkg.get_dir('prefix'))
         self.labelCodeValue.setText(pkg.name)
-
-        #FIXME this breaks the code when switching between CFDSTUDY and other modules
-        # in a salome_cfd with neptune_cfd (then the env_neptune is true)
-        # whereas the case can be code_saturne.
-        #_SetCFDCode(code)
 
 
     def update(self, code):
@@ -149,9 +136,7 @@ class InfoDialogHandler(InfoDialog):
         self.labelPrefixValue.setText(pkg.get_dir('prefix'))
         self.labelCodeValue.setText(pkg.name)
 
-
-
-#-----------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 
 class SetTreeLocationDialog(QDialog, Ui_SetTreeLocationDialog):
     """
@@ -165,6 +150,7 @@ class SetTreeLocationDialog(QDialog, Ui_SetTreeLocationDialog):
 
         self.setupUi(self)
 
+#-------------------------------------------------------------------------------
 
 class SetTreeLocationDialogHandler(SetTreeLocationDialog):
     """
@@ -452,7 +438,7 @@ class SetTreeLocationDialogHandler(SetTreeLocationDialog):
         self.reinit()
         SetTreeLocationDialog.reject(self)
 
-#----------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 
 class ECSConversionDialog(QDialog,Ui_ECSConversionDialog):
     """
@@ -539,8 +525,7 @@ class ECSConversionDialogHandler(ECSConversionDialog):
     def slotResNameChanged(self):
         self.ConvertBtn.setEnabled(str(self.ResultName.text())!= '')
 
-#----------------------------------------------------------------------------------------------------------------------
-
+#-------------------------------------------------------------------------------
 
 class GUIActivationDialog(QDialog,Ui_GUIActivationDialog):
     """
@@ -733,7 +718,6 @@ if __name__ == "__main__":
         translator = QTranslator()
         translator.load(QM_FILE)
         app.installTranslator(translator)
-#    w = InfoDialogHandler()
     w = SetTreeLocationDialogHandler()
     w.show()
     sys.exit(app.exec_())
