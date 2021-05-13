@@ -133,7 +133,10 @@ class InfoDialogHandler(InfoDialog):
         self.labelPrefixValue.setText(pkg.get_dir('prefix'))
         self.labelCodeValue.setText(pkg.name)
 
-        _SetCFDCode(code)
+        #FIXME this breaks the code when switching between CFDSTUDY and other modules
+        # in a salome_cfd with neptune_cfd (then the env_neptune is true)
+        # whereas the case can be code_saturne.
+        #_SetCFDCode(code)
 
 
     def update(self, code):
