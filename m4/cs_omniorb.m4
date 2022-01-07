@@ -119,7 +119,7 @@ then
     OMNIORB_RFLAGS=""
   else
     OMNIORB_LDFLAGS="-L$OMNIORB_LIB"
-    OMNIORB_RFLAGS="-R$OMNIORB_LIB"
+    OMNIORB_RFLAGS=""
   fi
 
   if test $host_os = mingw32 ; then
