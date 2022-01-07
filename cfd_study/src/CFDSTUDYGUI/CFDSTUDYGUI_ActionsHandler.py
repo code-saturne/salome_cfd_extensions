@@ -1975,7 +1975,6 @@ class CFDSTUDYGUI_ActionsHandler(QObject):
                 mess = cfdstudyMess.trMessage(self.tr("NO_CASE_STRUCTURE_FOUND"),[aCaseName])
                 cfdstudyMess.aboutMessage(mess)
                 return
-        aCmd.append('-n')
         sobjxml = None
         wm = self._SolverGUI.ExecGUI(self.dskAgent().workspace(), sobjxml, aCase, aCmd)
         self.updateActions()
