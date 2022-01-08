@@ -111,6 +111,32 @@ def initialize():
         sgPyQt.addSetting( "CFDSTUDY", "ExternalReader", DEFAULT_READER_NAME )
     if not sgPyQt.hasSetting( "CFDSTUDY", "ExternalDisplay"):
         sgPyQt.addSetting( "CFDSTUDY", "ExternalDisplay", DEFAULT_DISPLAY_VIEWER_NAME )
+
+    # preload code_saturne package to handle configuration file
+
+    from code_saturne import cs_package
+
+    cs_root_dir = os.getenv('CS_ROOT_DIR')
+    if cs_root_dir == None:
+        try:
+            import inspect
+            p = inspect.getfile(cs_package)
+            d = os.path.split(p)
+            while d[1] != 'lib':
+                d = os.path.split(d[0])
+                cs_root_dir = d[0]
+        except Exception:
+                pass
+
+    if cs_root_dir != None:
+        config_file = (os.path.join(cs_root_dir,
+                                    'lib',
+                                    'code_saturne_build.cfg'))
+        try:
+            pkg = cs_package.package(config_file=config_file)
+        except Exception:   # for compatibility with older versions
+            pass
+
     pass
 
 
