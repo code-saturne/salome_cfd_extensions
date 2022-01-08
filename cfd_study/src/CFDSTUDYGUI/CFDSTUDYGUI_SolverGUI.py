@@ -4,7 +4,7 @@
 
 # This file is part of Code_Saturne, a general-purpose CFD tool.
 #
-# Copyright (C) 1998-2021 EDF S.A.
+# Copyright (C) 1998-2022 EDF S.A.
 #
 # This program is free software; you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -58,6 +58,7 @@ from CFDSTUDYGUI_Commons import LoggingMgr
 import CFDSTUDYGUI_DataModel
 from CFDSTUDYGUI_Management import CFDGUI_Management
 from code_saturne import cs_info
+from code_saturne import cs_run_conf
 
 #-------------------------------------------------------------------------------
 # log config
@@ -122,7 +123,7 @@ def updateObjectBrowser():
 
 
 def findDockWindow(xmlName, caseName, studyCFDName):
-    """
+    """-
     Find if the dockwindow corresponding to this xmlcase is already opened
     """
     log.debug("findDockWindow")
@@ -148,15 +149,28 @@ class CFDSTUDYGUI_SolverGUI(QObject):
         self._CurrentWindow = None
         self.dockMainWin = None
 
-    def ExecGUI(self, WorkSpace, sobjXML, aCase, Args=''):
+
+    def ExecGUI(self, WorkSpace, xmlFileName, aCase):
         """
         Executes GUI for solver relatively CFDCode
         """
         log.debug("CFDSTUDY_SolverGUI.ExecGUI: ")
         mw = None
-        if sobjXML != None:
-            #searching
-            aTitle = sobjXML.GetName()
+        aTitle = xmlFileName
+        aStartPath = None
+        if aCase != None:
+            aChildList = CFDSTUDYGUI_DataModel.ScanChildren(aCase, "^DATA$")
+            if not len(aChildList) == 1:
+                # no DATA folder
+                mess = "DATA directory is not present in the case"
+                QMessageBox.warning(None, "Warning: ", mess)
+                return None
+            aStartPath = CFDSTUDYGUI_DataModel._GetPath(aChildList[0])
+            if aStartPath == '':
+                aStartPath = None  # To simplify further tests
+
+        if xmlFileName != None:
+            # check for already opened case
             if aCase != None:
                 if findDockWindow(aTitle, aCase.GetName(), aCase.GetFather().GetName()):
                     fileN = str(aCase.GetFather().GetName() + "." + aCase.GetName()) + '.' + str(aTitle)
@@ -164,24 +178,24 @@ class CFDSTUDYGUI_SolverGUI(QObject):
                     QMessageBox.warning(None, "Warning: ", mess)
                     return
         else:
-            aTitle = "unnamed"
+            if aStartPath != None:
+                run_conf_path = os.path.join(aStartPath, 'run.cfg')
+                if os.path.isfile(run_conf_path):
+                    run_conf = cs_run_conf.run_conf(run_conf_path)
+                    xmlFileName = run_conf.get('setup', 'param')
+            if xmlFileName == None:
+                aTitle = 'setup.xml'
+
             if aCase != None:
                 if findDockWindow(aTitle, aCase.GetName(), aCase.GetFather().GetName()):
-                    mess = "A new case is already opened"
+                    mess = "A case is already opened"
                     QMessageBox.warning(None, "Warning: ",mess)
                     return
-        if aCase != None:
-            aChildList = CFDSTUDYGUI_DataModel.ScanChildren(aCase, "^DATA$")
-            if not len(aChildList)== 1:
-                # no DATA folder
-                mess = "DATA directory is not present in the case"
-                QMessageBox.warning(None, "Warning: ", mess)
-                return None
 
-            aStartPath = CFDSTUDYGUI_DataModel._GetPath(aChildList[0])
+        if aCase != None:
             if aStartPath != None and aStartPath != '':
                 os.chdir(aStartPath)
-        mw = self.launchGUI(WorkSpace, aCase, sobjXML, Args)
+        mw = self.launchGUI(WorkSpace, aCase, xmlFileName)
         if mw != None:
             self._CurrentWindow = mw
 
@@ -373,7 +387,7 @@ class CFDSTUDYGUI_SolverGUI(QObject):
         return aTitle
 
 
-    def launchGUI(self, WorkSpace, aCase, sobjXML, Args):
+    def launchGUI(self, WorkSpace, aCase, xmlFileName):
         """
         mw.dockWidgetBrowser is the Browser of the CFD MainView
         """
@@ -382,40 +396,42 @@ class CFDSTUDYGUI_SolverGUI(QObject):
         from code_saturne.Base.MainView import MainView
         from code_saturne.cs_package import package
 
-        if sobjXML == None:
-            Title = "unnamed"
-        else:
-            Title = sobjXML.GetName()
-
         self.Workspace = WorkSpace
 
         # Get current solver name
         _solver_name = getCFDSolverName()
         pkg = package(name = _solver_name)
 
-        case, splash = process_cmd_line(Args)
+        args = []
+        if xmlFileName != None:
+            args = ['-p', xmlFileName]
+            Title = xmlFileName
+        else:
+            Title = 'setup.xml'
+
+        case, splash = process_cmd_line(args)
         try:
             mw = MainView(pkg, case, aCase)
         except:
             mess = "Error in Opening CFD GUI"
-            QMessageBox.warning(None, "Warning", mess, QMessageBox.Ok, QMessageBox.NoButton)
+            QMessageBox.warning(None, "Warning", mess, QMessageBox.Ok,
+                                QMessageBox.NoButton)
             return None
 
         # Put the standard panel of the MainView inside a QDockWidget
         # in the SALOME Desktop
         aTitle = self.setWindowTitle_CFD(mw, aCase, Title)
         dsk = sgPyQt.getDesktop()
-#####
+
         objectBrowserDockWindow = findObjectBrowserDockWindow()
 
         self.mainWin = QMainWindow()
         self.mainWin.setWindowTitle(aTitle)
         self.mainWin.setCentralWidget(mw.centralwidget)
         self.mainWin.addDockWidget(Qt.LeftDockWidgetArea,mw.dockWidgetBrowser)
-#####
+
         self.dockMainWin = QDockWidget(aTitle)
         self.dockMainWin.setWidget(self.mainWin)
-##
 
         dsk.addDockWidget(Qt.LeftDockWidgetArea,self.dockMainWin)
         self.dockMainWin.setVisible(True)
@@ -428,8 +444,10 @@ class CFDSTUDYGUI_SolverGUI(QObject):
         aStudyCFD = aCase.GetFather()
         aCaseCFD  = aCase
         xmlFileName = str(Title)
-        _c_CFDGUI.set_d_CfdCases(self.dockMainWin, mw, aStudyCFD, aCaseCFD, xmlFileName, sobjXML)
-        dockMain = _c_CFDGUI.getDockWithCFDNames(aStudyCFD.GetName(), aCaseCFD.GetName(), xmlFileName)
+        _c_CFDGUI.set_d_CfdCases(self.dockMainWin, mw, aStudyCFD, aCaseCFD, xmlFileName)
+        dockMain = _c_CFDGUI.getDockWithCFDNames(aStudyCFD.GetName(),
+                                                 aCaseCFD.GetName(),
+                                                 xmlFileName)
         if dockMain != None:
             dockMain.visibilityChanged["bool"].connect(self.resizeMainWindowDock)
 
@@ -460,6 +478,7 @@ class CFDSTUDYGUI_SolverGUI(QObject):
             if visible:
                 dsk.resizeDocks({dock}, {900},Qt.Horizontal)
 
+
     def resizeObjectBrowserDock(self,visible):
         """
         visible referred to Object Browser dock widget
@@ -474,6 +493,7 @@ class CFDSTUDYGUI_SolverGUI(QObject):
             else:
                 if self.dockMainWin != None :
                     dsk.resizeDocks({self.dockMainWin}, {900},Qt.Horizontal)
+
 
     def hideDocks(self):
         _c_CFDGUI.hideDocks()
@@ -526,7 +546,8 @@ class CFDSTUDYGUI_SolverGUI(QObject):
 
     def removeDockWindowfromStudyAndCaseNames(self, studyCFDName, caseName):
         """
-        Close the CFD_study_dock_windows if opened from close Study popup menu into the object browser
+        Close the CFD_study_dock_windows if opened from close Study popup menu
+        into the object browser
         """
         log.debug("removeDockWindowfromStudyAndCaseNames -> %s %s" % (studyCFDName, caseName))
         dsk = sgPyQt.getDesktop()
@@ -542,4 +563,5 @@ class CFDSTUDYGUI_SolverGUI(QObject):
         dsk = sgPyQt.getDesktop()
         if _c_CFDGUI != None:
             _c_CFDGUI.delDock(dsk, studyCFDName, caseName, xmlName)
+
 #-------------------------------------------------------------------------------

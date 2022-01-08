@@ -4,7 +4,7 @@
 
 # This file is part of Code_Saturne, a general-purpose CFD tool.
 #
-# Copyright (C) 1998-2021 EDF S.A.
+# Copyright (C) 1998-2022 EDF S.A.
 #
 # This program is free software; you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -265,7 +265,6 @@ class CFDSTUDYGUI_ActionsHandler(QObject):
                                       ObjectTR.tr("LAUNCH_CFDSTUDY_GUI_SB"),\
                                       ObjectTR.tr("LAUNCH_CFDSTUDY_GUI_ICON"))
         # popup open GUI on CFD CASE with slotLaunchGUI
-        sgPyQt.createTool(action, tool_id)
         action_id = sgPyQt.actionId(action)
         self._ActionMap[action_id] = action
         self._CommonActionIdMap[LaunchGUIAction] = action_id
@@ -934,11 +933,11 @@ class CFDSTUDYGUI_ActionsHandler(QObject):
                 self.commonAction(RemoveAction).setVisible(True)
 
 
-
     def updateActionsXmlFile(self, XMLSobj) :
         log.debug("updateActionsXmlFile")
         if XMLSobj != None:
-            if CFDSTUDYGUI_DataModel.checkType(XMLSobj, CFDSTUDYGUI_DataModel.dict_object["DATAfileXML"]):
+            if CFDSTUDYGUI_DataModel.checkType(XMLSobj,
+                                               CFDSTUDYGUI_DataModel.dict_object["DATAfileXML"]):
                 self.solverAction(SolverCloseAction).setEnabled(False)
                 self.solverAction(SolverSaveAction).setEnabled(False)
                 self.solverAction(SolverSaveAsAction).setEnabled(False)
@@ -949,13 +948,16 @@ class CFDSTUDYGUI_ActionsHandler(QObject):
                 study  = CFDSTUDYGUI_DataModel.GetStudyByObj(XMLSobj)
                 if case != None and study != None:
 
-                    if CFDSTUDYGUI_SolverGUI._c_CFDGUI.findDock(XMLSobj.GetName(), case.GetName(),study.GetName()):
+                    if CFDSTUDYGUI_SolverGUI._c_CFDGUI.findDock(XMLSobj.GetName(),
+                                                                case.GetName(),
+                                                                study.GetName()):
                         self.solverAction(SolverCloseAction).setEnabled(True)
                         self.commonAction(OpenGUIAction).setEnabled(False)
                         self.solverAction(SolverSaveAction).setEnabled(True)
                         self.solverAction(SolverSaveAsAction).setEnabled(True)
                         self.solverAction(SolverUndoAction).setEnabled(True)
                         self.solverAction(SolverRedoAction).setEnabled(True)
+
 
     def customPopup(self, id, popup):
         """
@@ -995,6 +997,8 @@ class CFDSTUDYGUI_ActionsHandler(QObject):
              id == CFDSTUDYGUI_DataModel.dict_object["MESHFolder"]           or \
              id == CFDSTUDYGUI_DataModel.dict_object["POSTFolder"] :
             popup.addAction(self.commonAction(UpdateObjBrowserAction))
+        elif id == CFDSTUDYGUI_DataModel.dict_object["DATARunConf"]:
+            popup.addAction(self.commonAction(ViewAction))
         elif id == CFDSTUDYGUI_DataModel.dict_object["DATAFile"]:
             popup.addAction(self.commonAction(EditAction))
             popup.addAction(self.commonAction(MoveToDRAFTAction))
@@ -1771,11 +1775,8 @@ class CFDSTUDYGUI_ActionsHandler(QObject):
                     return
 
                 # xml case file not already opened
-                aCmd = []
-                aCmd.append('-p')
-                aCmd.append(aXmlFileName)
-                aXmlFile = sobj
-                wm = self._SolverGUI.ExecGUI(self.dskAgent().workspace(), aXmlFile, aCase, aCmd)
+                wm = self._SolverGUI.ExecGUI(self.dskAgent().workspace(),
+                                             aXmlFileName, aCase)
                 self.updateActions()
 
 
@@ -1941,7 +1942,6 @@ class CFDSTUDYGUI_ActionsHandler(QObject):
         # get current case name
         aCaseName = aCase.GetName()
         aXmlFile = None
-        aCmd = []
 
         # object of DATA folder
         aChildList = CFDSTUDYGUI_DataModel.ScanChildren(aCase, "^DATA$")
@@ -1975,8 +1975,7 @@ class CFDSTUDYGUI_ActionsHandler(QObject):
                 mess = cfdstudyMess.trMessage(self.tr("NO_CASE_STRUCTURE_FOUND"),[aCaseName])
                 cfdstudyMess.aboutMessage(mess)
                 return
-        sobjxml = None
-        wm = self._SolverGUI.ExecGUI(self.dskAgent().workspace(), sobjxml, aCase, aCmd)
+        wm = self._SolverGUI.ExecGUI(self.dskAgent().workspace(), None, aCase)
         self.updateActions()
 
 
@@ -2102,6 +2101,7 @@ class CFDSTUDYGUI_ActionsHandler(QObject):
         log.debug("slotSaveAsDataFile")
         oldXmlFilePath, xmlFilePath = self._SolverGUI.SaveAsXmlFile()
         self.updateGui(oldXmlFilePath,xmlFilePath)
+
 
     def updateGui(self,oldXmlFilePath,xmlFilePath):
         log.debug("updateGui")
@@ -2293,7 +2293,8 @@ class CFDSTUDYGUI_ActionsHandler(QObject):
                 meshcomponent = builder.NewComponent( "SMESH" )
                 attr = builder.FindOrCreateAttribute( meshcomponent, "AttributeName" )
                 attr.SetValue( "SMESH" )
-            # --- loop on meshes to find if a mesh with the same path and name is already loaded in SMESH
+            # --- loop on meshes to find if a mesh with the same path
+            # and name is already loaded in SMESH
             MeshPath = ""
             iter  = study.NewChildIterator(meshcomponent)
             while iter.More():  # --- loop on meshes
@@ -2415,3 +2416,4 @@ class CFDSTUDYGUI_ActionsHandler(QObject):
         log.debug("connectSolverGUI")
         self._SolverGUI.connectDockWindows()
 
+#-------------------------------------------------------------------------------

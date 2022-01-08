@@ -71,7 +71,6 @@ class CFDGUI_Management:
       self.studyCFDPosInListe              = 2
       self.caseCFDPosInListe               = 3
       self.xmlCFDFileNamePosInListe        = 4
-      self.sobjXmlPosInListe               = 5
 
       self.nbelem                          = 6
 
@@ -80,7 +79,6 @@ class CFDGUI_Management:
       self.aStudyCFD                       = None
       self.aCaseCFD                        = None
       self.aXmlCFDFile                     = None
-      self.sobjXml                         = None
 
       self.d_CfdCases                      = []
 
@@ -88,21 +86,20 @@ class CFDGUI_Management:
     def set_d_CfdCases(self,
                        dock, mwCFD,
                        aStudyCFD, aCaseCFD,
-                       axmlCFDFile, sobjXml):
+                       axmlCFDFile):
       """
       Add a new Solver GUI in the SALOME desktop.
       """
 
       self.d_CfdCases.append([dock, mwCFD,
-                                       aStudyCFD, aCaseCFD,
-                                       axmlCFDFile, sobjXml])
+                              aStudyCFD, aCaseCFD,
+                              axmlCFDFile])
 
       self.dock          = dock
       self.aMwCFD        = mwCFD
       self.aStudyCFD     = aStudyCFD
       self.aCaseCFD      = aCaseCFD
       self.aXmlCFDFile   = axmlCFDFile
-      self.sobjXml       = sobjXml
 
       log.debug("set_d_CfdCases \n\tdock = %s\n\tmwCFD = %s\n\taStudyCFD = %s\n\taCaseCFD = %s\n\taxmlCFDFile = %s" % \
                  (dock, mwCFD, aStudyCFD, aCaseCFD, axmlCFDFile))
@@ -146,7 +143,7 @@ class CFDGUI_Management:
 
     def getDockListeWithCFDStudyAndCaseNames(self, studyCFDName, caseName):
         """
-        a CFD case can have more xml files
+        a CFD case can have more xml files (though this is not recommended)
         """
         l = []
         if not self.checkDockWindowsLists():
@@ -252,7 +249,8 @@ class CFDGUI_Management:
                 dsk.removeDockWidget(dockcfd)
                 dockcfd.setParent(None)
                 dockcfd.close()
-        # remove the liste which contains the removed docks in the main list self.d_CfdCases
+            # remove the list which contains the removed docks in
+            # the main list self.d_CfdCases
             self.d_CfdCases.remove(l)
 
 

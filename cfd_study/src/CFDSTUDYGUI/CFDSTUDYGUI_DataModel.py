@@ -4,7 +4,7 @@
 
 # This file is part of Code_Saturne, a general-purpose CFD tool.
 #
-# Copyright (C) 1998-2021 EDF S.A.
+# Copyright (C) 1998-2022 EDF S.A.
 #
 # This program is free software; you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -139,7 +139,7 @@ dict_object["DRAFTFolder"]            = 100014
 dict_object["DATADRAFTFile"]          = 100015
 dict_object["DATAPyFile"]             = 100016
 
-
+dict_object["DATARunConf"]            = 100017
 dict_object["DATALaunch"]             = 100018
 dict_object["DATAfileXML"]            = 100019
 
@@ -199,6 +199,7 @@ dict_object["OpenSyrthesCaseFile"]      = 100111
 d_dirMesh      = {}
 MESHSubFolder = "MESHSubFolder"
 MESHSubFolder_int = 200000
+
 #-------------------------------------------------------------------------------
 # Definition of the icon of objects to represent in the Object Browser.
 # Attribut "AttributePixMap" for the related SObject.
@@ -222,6 +223,7 @@ icon_collection[dict_object["DATADRAFTFile"]]  = "CFDSTUDY_EDIT_DOCUMENT_OBJ_ICO
 
 icon_collection[dict_object["REFERENCEDATAFile"]] = "CFDSTUDY_DOCUMENT_OBJ_ICON"
 
+icon_collection[dict_object["DATARunConf"]]    = "CFDSTUDY_EDIT_DOCUMENT_OBJ_ICON"
 icon_collection[dict_object["DATALaunch"]]     = "CFDSTUDY_EXECUTABLE_OBJ_ICON"
 icon_collection[dict_object["DATAfileXML"]]    = "CFDSTUDY_DATA_XML_FILE_OBJ_ICON"
 
@@ -937,8 +939,11 @@ def _FillObject(theObject, theParent, theBuilder):
             if name == "DRAFT":
                 objectId = dict_object["DRAFTFolder"]
         else:
-            if name[0:10] == "code_saturne" or name[0:10] == "neptune_cfd":
-                objectId = dict_object["DATALaunch"]
+            if name[0:12] == "code_saturne" or name[0:10] == "neptune_cfd":
+                 # could use "DATALaunch" but prefer to hide this wrapper.
+                objectId = dict_object["OtherFile"]
+            elif name[0:10] == "run.cfg":
+                objectId = dict_object["DATARunConf"]
             elif re.match("^dp_", name) or re.match("^meteo",name) or re.match("^cs_", name):
                 objectId = dict_object["DATAFile"]
             elif re.match(".*\.py$", name):
@@ -954,6 +959,8 @@ def _FillObject(theObject, theParent, theBuilder):
                         l2 = f.readline()
                         if l2.startswith('''<Code_Saturne_GUI''') or l2.startswith('''<NEPTUNE_CFD_GUI'''):
                             objectId = dict_object["DATAfileXML"]
+                    else:
+                            objectId = dict_object["DATAFile"]
                     f.close()
 
     # parent is DRAFT folder
@@ -1736,6 +1743,7 @@ def checkType(theObject, theType):
         return False
     if theObject != None and theType!= None :
         return getType(theObject) == theType
+
 
 def checkPreMEDType(theObject):
     """
