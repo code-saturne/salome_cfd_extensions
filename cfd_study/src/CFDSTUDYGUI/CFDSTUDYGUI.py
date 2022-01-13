@@ -40,9 +40,9 @@ import logging
 # Third-party modules
 #-------------------------------------------------------------------------------
 
-from code_saturne.Base.QtCore    import *
-from code_saturne.Base.QtGui     import *
-from code_saturne.Base.QtWidgets import *
+from code_saturne.gui.base.QtCore    import *
+from code_saturne.gui.base.QtGui     import *
+from code_saturne.gui.base.QtWidgets import *
 
 #-------------------------------------------------------------------------------
 # Salome modules
@@ -114,7 +114,7 @@ def initialize():
 
     # preload code_saturne package to handle configuration file
 
-    from code_saturne import cs_package
+    from code_saturne.base import cs_package
 
     cs_root_dir = os.getenv('CS_ROOT_DIR')
     if cs_root_dir == None:

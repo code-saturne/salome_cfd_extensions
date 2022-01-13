@@ -39,11 +39,12 @@ import logging
 #-------------------------------------------------------------------------------
 # Third-party modules
 #-------------------------------------------------------------------------------
-from code_saturne.Base.QtCore    import *
-from code_saturne.Base.QtGui     import *
-from code_saturne.Base.QtWidgets import *
-from code_saturne.Base import QtPage
-from code_saturne.cs_exec_environment import enquote_arg
+
+from code_saturne.gui.base.QtCore    import *
+from code_saturne.gui.base.QtGui     import *
+from code_saturne.gui.base.QtWidgets import *
+from code_saturne.gui.base import QtPage
+from code_saturne.base.cs_exec_environment import enquote_arg
 
 #-------------------------------------------------------------------------------
 # Salome modules
@@ -904,7 +905,7 @@ class CFDSTUDYGUI_ActionsHandler(QObject):
             if a != SolverFileMenu and a != SolverToolsMenu and a != SolverHelpMenu:
                 self.solverAction(a).setEnabled(isActivatedView)
 
-        from code_saturne.cs_package import package
+        from code_saturne.base.cs_package import package
         pkg = package(name='neptune_cfd')
         bin_ncfd = os.path.join(pkg.get_dir('bindir'),
                                 'neptune_cfd'+pkg.config.shext)

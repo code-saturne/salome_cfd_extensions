@@ -261,7 +261,7 @@ class CFDSTUDY_DistantLauncher:
 
         else:
 
-            from code_saturne.cs_run import run as get_run_id
+            from code_saturne.base.cs_run import run as get_run_id
 
             id_args = ['run', '--suggest-id']
             self.run_id = get_run_id(id_args, self.pkg)[1]

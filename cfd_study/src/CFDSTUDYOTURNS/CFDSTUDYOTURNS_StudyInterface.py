@@ -231,7 +231,7 @@ class cfd_openturns_study:
         """
         Setting the package according to the requested code by the user
         """
-        from code_saturne.cs_package import package
+        from code_saturne.base.cs_package import package
 
         pkg_name = self.cfg.get('study_parameters', 'code_name')
 
@@ -251,7 +251,7 @@ class cfd_openturns_study:
         from code_saturne.model.NotebookModel import NotebookModel
 
         # Creating the case from the ref case
-        from code_saturne.cs_script import master_script
+        from code_saturne.base.cs_script import master_script
 
         case_create_args = ['create',
                             '-c',

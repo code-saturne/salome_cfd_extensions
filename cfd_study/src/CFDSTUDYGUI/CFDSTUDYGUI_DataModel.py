@@ -72,8 +72,8 @@ import subprocess
 # Third-party modules
 #-------------------------------------------------------------------------------
 
-from code_saturne.Base.QtCore    import *
-from code_saturne.Base.QtWidgets import *
+from code_saturne.gui.base.QtCore    import *
+from code_saturne.gui.base.QtWidgets import *
 
 from omniORB import CORBA
 
@@ -100,7 +100,7 @@ import CFDSTUDYGUI_SolverGUI
 import CFDSTUDYGUI_Commons
 from CFDSTUDYGUI_CommandMgr import runCommand
 from CFDSTUDYGUI_Message import cfdstudyMess
-from code_saturne.cs_exec_environment import separate_args
+from code_saturne.base.cs_exec_environment import separate_args
 
 #-------------------------------------------------------------------------------
 # log config

@@ -27,7 +27,7 @@ Common
 ======
 
 """
-from code_saturne.Base.QtCore    import *
+from code_saturne.gui.base.QtCore    import *
 
 #-------------------------------------------------------------------------------
 # Standard modules
@@ -157,7 +157,7 @@ def CheckCFD_CodeEnv(code):
         iok = False
         _solver_name = getCFDSolverName(code);
         try:
-            from code_saturne.cs_package import package
+            from code_saturne.base.cs_package import package
             pkg = package(name = _solver_name)
             b = os.path.join(pkg.get_dir('bindir'),
                              _solver_name+pkg.config.shext)
@@ -208,7 +208,7 @@ def BinCode():
     c = ""
     mess = ""
     # default package is code_saturne (for convert...)
-    from code_saturne.cs_package import package
+    from code_saturne.base.cs_package import package
 
     try:
         _solver_name = getCFDSolverName()

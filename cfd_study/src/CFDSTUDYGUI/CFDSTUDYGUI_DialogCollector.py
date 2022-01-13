@@ -39,9 +39,9 @@ import os, re, shutil, logging
 # Third-party modules
 #-------------------------------------------------------------------------------
 
-from code_saturne.Base.QtCore    import *
-from code_saturne.Base.QtGui     import *
-from code_saturne.Base.QtWidgets import *
+from code_saturne.gui.base.QtCore    import *
+from code_saturne.gui.base.QtGui     import *
+from code_saturne.gui.base.QtWidgets import *
 # ObjectTR is a convenient object for traduction purpose
 
 ObjectTR = QObject()
@@ -117,7 +117,7 @@ class InfoDialogHandler(InfoDialog):
 
     def setCode(self, env_saturne):
 
-        from code_saturne.cs_package import package
+        from code_saturne.base.cs_package import package
 
         pkg = package()
 
@@ -127,7 +127,7 @@ class InfoDialogHandler(InfoDialog):
 
 
     def update(self, code):
-        from code_saturne.cs_package import package
+        from code_saturne.base.cs_package import package
 
         _solver_name = getCFDSolverName(code)
         pkg = package(name = _solver_name)

@@ -41,9 +41,9 @@ import os, sys, logging
 # Third-party modules
 #-------------------------------------------------------------------------------
 
-from code_saturne.Base.QtCore    import *
-from code_saturne.Base.QtGui     import *
-from code_saturne.Base.QtWidgets import *
+from code_saturne.gui.base.QtCore    import *
+from code_saturne.gui.base.QtGui     import *
+from code_saturne.gui.base.QtWidgets import *
 
 #-------------------------------------------------------------------------------
 # Salome modules
@@ -57,8 +57,8 @@ from CFDSTUDYGUI_Commons import CFD_Code, CFD_Saturne, CFD_Neptune, getCFDSolver
 from CFDSTUDYGUI_Commons import LoggingMgr
 import CFDSTUDYGUI_DataModel
 from CFDSTUDYGUI_Management import CFDGUI_Management
-from code_saturne import cs_info
-from code_saturne import cs_run_conf
+from code_saturne.base import cs_info
+from code_saturne.base import cs_run_conf
 
 #-------------------------------------------------------------------------------
 # log config
@@ -324,56 +324,55 @@ class CFDSTUDYGUI_SolverGUI(QObject):
 
 
     def onSaturneHelpManual(self):
-        from code_saturne.cs_package import package
+        from code_saturne.base.cs_package import package
         argv_info = ['--guide', 'user']
         cs_info.main(argv_info, package())
 
 
     def onSaturneHelpTutorial(self):
-        from code_saturne.cs_package import package
+        from code_saturne.base.cs_package import package
         msg = "See http://code-saturne.org web site for tutorials."
         QMessageBox.about(self._CurrentWindow, 'code_saturne Interface', msg)
 
 
     def onSaturneHelpKernel(self):
-        from code_saturne.cs_package import package
+        from code_saturne.base.cs_package import package
         argv_info = ['--guide', 'theory']
         cs_info.main(argv_info, package())
 
 
     def onSaturneHelpRefcard(self):
-        from code_saturne.cs_package import package
+        from code_saturne.base.cs_package import package
         argv_info = ['--guide', 'refcard']
         cs_info.main(argv_info, package())
 
 
     def onSaturneHelpDoxygen(self):
-        from code_saturne.cs_package import package
+        from code_saturne.base.cs_package import package
         argv_info = ['--guide', 'Doxygen']
         cs_info.main(argv_info, package())
 
 
     def onNeptuneHelpManual(self):
-        from code_saturne.cs_package import package
+        from code_saturne.base.cs_package import package
         argv_info = ['--guide', 'user']
         cs_info.main(argv_info, package(name='neptune_cfd'))
 
 
     def onNeptuneHelpTutorial(self):
-        from code_saturne.cs_package import package
+        from code_saturne.base.cs_package import package
         argv_info = ['--guide', 'tutorial']
         cs_info.main(argv_info, package(name='neptune_cfd'))
 
 
     def onNeptuneHelpKernel(self):
-        from code_saturne.cs_package import package
+        from code_saturne.base.cs_package import package
         argv_info = ['--guide', 'theory']
         cs_info.main(argv_info, package(name='neptune_cfd'))
 
 
     def onNeptuneHelpDoxygen(self):
-        from code_saturne.cs_package import package
-        from neptune_cfd.nc_package import package
+        from code_saturne.base.cs_package import package
         argv_info = ['--guide', 'Doxygen']
         cs_info.main(argv_info, package(name='neptune_cfd'))
 
@@ -392,9 +391,9 @@ class CFDSTUDYGUI_SolverGUI(QObject):
         mw.dockWidgetBrowser is the Browser of the CFD MainView
         """
         log.debug("launchGUI")
-        from code_saturne.cs_gui import process_cmd_line
-        from code_saturne.Base.MainView import MainView
-        from code_saturne.cs_package import package
+        from code_saturne.gui.cs_gui import process_cmd_line
+        from code_saturne.gui.base.MainView import MainView
+        from code_saturne.base.cs_package import package
 
         self.Workspace = WorkSpace
 

@@ -38,7 +38,7 @@ components: Object Browser, Python console, 3D/2D viewers, etc.
 # Third-party modules
 #-------------------------------------------------------------------------------
 
-from code_saturne.Base.QtCore    import *
+from code_saturne.gui.base.QtCore    import *
 
 #-------------------------------------------------------------------------------
 # Salome modules

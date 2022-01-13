@@ -37,9 +37,9 @@ import os, logging
 # Third-party modules
 #-------------------------------------------------------------------------------
 
-from code_saturne.Base.QtCore    import *
-from code_saturne.Base.QtGui     import *
-from code_saturne.Base.QtWidgets import *
+from code_saturne.gui.base.QtCore    import *
+from code_saturne.gui.base.QtGui     import *
+from code_saturne.gui.base.QtWidgets import *
 
 #-------------------------------------------------------------------------------
 # Salome modules

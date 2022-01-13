@@ -69,7 +69,7 @@ class cfd_openturns_local_launcher:
 
         os.chdir(self.case_id)
 
-        from code_saturne.cs_script import master_script
+        from code_saturne.base.cs_script import master_script
 
         run_args = ['run']
 
@@ -99,7 +99,7 @@ class cfd_openturns_local_launcher:
             self.run_id = self.run_prefix + '{:0>4}'.format(idx + 1)
 
         else:
-            from code_saturne.cs_run import run as get_run_id
+            from code_saturne.base.cs_run import run as get_run_id
             id_args = ['run', '--suggest-id']
 
             self.run_id = get_run_id(id_args, self.pkg)[1]
