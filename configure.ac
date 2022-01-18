@@ -4,7 +4,7 @@
 
 # This file is part of code_saturne, a general-purpose CFD tool.
 #
-# Copyright (C) 1998-2021 EDF S.A.
+# Copyright (C) 1998-2022 EDF S.A.
 #
 # This program is free software; you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -30,7 +30,7 @@ m4_define([cs_licence_c_comment],
 [/*
   This file is part of code_saturne, a general-purpose CFD tool.
 
-  Copyright (C) 1998-2021 EDF S.A.
+  Copyright (C) 1998-2022 EDF S.A.
 
   This program is free software; you can redistribute it and/or modify it under
   the terms of the GNU General Public License as published by the Free Software
@@ -51,7 +51,7 @@ m4_define([cs_licence_c_comment],
 #       to be maintained properly (as it should be anyways).
 
 m4_define([salome_cfd_major_version], [7])
-m4_define([salome_cfd_minor_version], [1])
+m4_define([salome_cfd_minor_version], [2])
 m4_define([salome_cfd_release_version], [0])
 m4_define([salome_cfd_version_extra], [alpha])
 m4_define([salome_cfd_version_string],
