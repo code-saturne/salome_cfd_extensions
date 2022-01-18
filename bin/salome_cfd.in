@@ -5,7 +5,7 @@
 
 # This file is part of Code_Saturne, a general-purpose CFD tool.
 #
-# Copyright (C) 1998-2021 EDF S.A.
+# Copyright (C) 1998-2022 EDF S.A.
 #
 # This program is free software; you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -34,9 +34,7 @@ This module defines the following functions:
 # Library modules import
 #-------------------------------------------------------------------------------
 
-import os, sys, subprocess
-
-from optparse import OptionParser
+import os, sys, subprocess, argparse
 
 #-------------------------------------------------------------------------------
 # Configuration
@@ -213,16 +211,16 @@ def process_cmd_line(argv):
     Processes the passed command line arguments.
     """
 
-    if sys.argv[0][-3:] == '.py':
-        usage = "usage: %prog [options]"
-    else:
-        usage = "usage: %prog salome [options]"
+    parser = argparse.ArgumentParser(description="Run a case or specified run stages.")
 
-    parser = OptionParser(usage=usage)
+    parser.add_argument("--modules", dest="modules", type=str,
+                        help="comma-separated of Salome modules to use")
 
-    (options, args) = parser.parse_args(argv)
+    parser.set_defaults(modules="GEOM,SHAPER,SMESH,FIELDS,CFDSTUDY,PARAVIS,YACS,JOBMANAGER,HOMARD,OPENTURNS")
 
-    return
+    options = parser.parse_args(argv)
+
+    return options
 
 #-------------------------------------------------------------------------------
 # Launch SALOME platform with CFDSTUDY module
@@ -233,7 +231,7 @@ def main(argv):
     Main function.
     """
 
-    process_cmd_line(argv)
+    options = process_cmd_line(argv)
 
     # Check for SALOME support
 
@@ -283,7 +281,7 @@ export SALOME_PLEASE_SETUP_ENVIRONMENT_AS_BEFORE=1
     cmd = template % {'prefix': prefix,
                       'pythondirs': pythondirs,
                       'runsalome': run_cmd,
-                      'modules': default_modules}
+                      'modules': options.modules}
 
     # Note: both EDF and CAS type builds use bash, so force it here
 
