@@ -946,15 +946,18 @@ def _FillObject(theObject, theParent, theBuilder):
             else:
                 if os.path.isfile(path):
                     fd = os.open(path , os.O_RDONLY)
-                    f = os.fdopen(fd)
-                    l1 = f.readline()
-                    if l1.startswith('''<?xml version="1.0" encoding="utf-8"?><Code_Saturne_GUI''') or l1.startswith('''<?xml version="1.0" encoding="utf-8"?><NEPTUNE_CFD_GUI'''):
-                        objectId = dict_object["DATAfileXML"]
-                    elif l1.startswith('''<?xml version="1.0" encoding="utf-8"?>''') :
-                        l2 = f.readline()
-                        if l2.startswith('''<Code_Saturne_GUI''') or l2.startswith('''<NEPTUNE_CFD_GUI'''):
+                    try:
+                        f = os.fdopen(fd)
+                        l1 = f.readline()
+                        if l1.startswith('''<?xml version="1.0" encoding="utf-8"?><Code_Saturne_GUI''') or l1.startswith('''<?xml version="1.0" encoding="utf-8"?><NEPTUNE_CFD_GUI'''):
                             objectId = dict_object["DATAfileXML"]
-                    f.close()
+                        elif l1.startswith('''<?xml version="1.0" encoding="utf-8"?>''') :
+                            l2 = f.readline()
+                            if l2.startswith('''<Code_Saturne_GUI''') or l2.startswith('''<NEPTUNE_CFD_GUI'''):
+                                objectId = dict_object["DATAfileXML"]
+                        f.close()
+                    except:
+                        pass
 
     # parent is DRAFT folder
     elif parentId == dict_object["DRAFTFolder"]:
