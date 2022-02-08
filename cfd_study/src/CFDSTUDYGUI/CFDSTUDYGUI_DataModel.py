@@ -1818,23 +1818,27 @@ def checkCode(theCase):
     aDataObj =  aChildList[0]
     aDataPath = _GetPath(aDataObj)
 
-    import sys
-    if sys.platform.startswith("win"):
-        aChildList = ScanChildren(aDataObj, "^code_saturne.bat$")
-        if len(aChildList) == 1:
-            return CFD_Saturne
-        aChildList = ScanChildren(aDataObj, "^neptune_cfd.bat$")
-        if len(aChildList) == 1:
-            return CFD_Neptune
-    else:
-        aChildList = ScanChildren(aDataObj, "^code_saturne$")
-        if len(aChildList) == 1:
-            return CFD_Saturne
-        aChildList = ScanChildren(aDataObj, "^neptune_cfd$")
-        if len(aChildList) == 1:
-            return CFD_Neptune
+    # code_saturne is returned by default
+    # all xml files are read until NEPTUNE_CFD is found
+    # thus it will not work with a mix of saturne/neptune xml files
 
-    return CFD_Code()
+    fileList = ScanChildren(aDataObj, "^.*$")
+
+    for ifile in fileList:
+        filePath = _GetPath(ifile)
+        if os.path.isfile(filePath):
+            fd = os.open(filePath,os.O_RDONLY)
+            f = os.fdopen(fd)
+            l1 = f.readline()
+            if l1.startswith('''<?xml version="1.0" encoding="utf-8"?><NEPTUNE_CFD_GUI'''):
+                return CFD_Neptune
+            elif l1.startswith('''<?xml version="1.0" encoding="utf-8"?>''') :
+                l2 = f.readline()
+                if l2.startswith('''<NEPTUNE_CFD_GUI'''):
+                    return CFD_Neptune
+            f.close()
+
+    return CFD_Saturne
 
 
 def isLinkPathObject(theObject):
