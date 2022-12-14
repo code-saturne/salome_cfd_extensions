@@ -255,7 +255,7 @@ def main(argv):
     # but the first part did not work with CAS builds, and the following
     # seems enough for both.
 
-    run_cmd = "${KERNEL_ROOT_DIR}/bin/salome/runSalome.py"
+    run_cmd = "${KERNEL_ROOT_DIR}/bin/salome/runSalomeOld.py"
 
     # Save PYTHONPATH as CS_SALOME_TOP_PYTHONPATH to avoid issues
     # with launch of code due to PYTHONPATH with extra (cumulative) entries
