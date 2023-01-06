@@ -225,17 +225,13 @@ def BinCode():
 
 def isaCFDCase(theCasePath):
     log.debug("isaCFDCase")
-    iok = True
     dirList = []
     if os.path.isdir(theCasePath):
         dirList = os.walk(theCasePath).__next__()[1]
-        if (dirList.count("DATA") and \
+        if (dirList.count("DATA") or \
             dirList.count("SRC")):
-            if not (dirList.count("RESU")):
-                subprocess.call(["mkdir","-p",os.path.join(theCasePath,"RESU")])
-        else:
-            iok = False
-    return iok
+            return True
+    return False
 
 def isaCFDStudy(theStudyPath):
     log.debug("isaCFDStudy")

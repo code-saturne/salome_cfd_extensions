@@ -520,7 +520,7 @@
         </message>
         <message>
             <source>ENV_DLG_CASE_FILE</source>
-            <translation>La structure du répertoire de cas CFD pour le fichier %s n'est pas correcte : un ou plusieurs des répertoires DATA  RESU  SCRIPTS  SRC manquent dans le répertoire %s !!! </translation>
+            <translation>La structure du répertoire de cas CFD pour le fichier %s n'est pas correcte : un ou plusieurs des répertoires DATA  RESU  SRC manquent dans le répertoire %s !!! </translation>
         </message>
         <message>
             <source>INFO_DLG_NO_CASE_INTO_OB</source>

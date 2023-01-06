@@ -519,7 +519,7 @@
         </message>
         <message>
             <source>ENV_DLG_CASE_FILE</source>
-            <translation>CFD case directory structure for the file %s is not correct : One or several directories among DATA  RESU  SCRIPTS  SRC are missing into directory %s !!! </translation>
+            <translation>CFD case directory structure for the file %s is not correct : One or several directories among DATA  RESU  SRC are missing into directory %s !!! </translation>
         </message>
         <message>
             <source>INFO_DLG_NO_CASE_INTO_OB</source>
