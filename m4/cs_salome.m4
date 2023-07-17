@@ -123,8 +123,8 @@ if test x$with_salome != xno ; then
 
     (/bin/bash -c "$SALOMEENVCMD ; env > conftest.salome_env")
 
-    KERNEL_ROOT_DIR=$(grep KERNEL_ROOT_DIR conftest.salome_env | cut -f2 -d'=')
-    GUI_ROOT_DIR=$(grep GUI_ROOT_DIR conftest.salome_env | cut -f2 -d'=')
+    KERNEL_ROOT_DIR=$(grep ^KERNEL_ROOT_DIR conftest.salome_env | cut -f2 -d'=')
+    GUI_ROOT_DIR=$(grep ^GUI_ROOT_DIR conftest.salome_env | cut -f2 -d'=')
 
     \rm -rf conftest.salome_env
 

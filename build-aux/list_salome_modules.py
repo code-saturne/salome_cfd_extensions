@@ -84,7 +84,8 @@ if __name__ == '__main__':
 
     path = os.path.join(salome_root_dir, '.config_appli_template.xml')
     if not os.path.isfile(path):
-        raise Exception('XML file: ' + path + ' not found')
+        print()
+        sys.exit(0)
 
     doc = minidom.parse(path)
 

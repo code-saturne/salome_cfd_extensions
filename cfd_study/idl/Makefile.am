@@ -36,13 +36,15 @@ MODULE_NAME = CFDSTUDY
 BUILT_SOURCES = CFDSTUDY_GenSK.cc
 IDL_FILES = CFDSTUDY_Gen.idl
 
-salomelib_LTLIBRARIES = libSalomeIDLCFDSTUDY.la
 dist_salomeidl_DATA = $(IDL_FILES) 
+nodist_salomeinclude_HEADERS = CFDSTUDY_Gen.hh
+
+salomelib_LTLIBRARIES = libSalomeIDLCFDSTUDY.la
+
 libSalomeIDLCFDSTUDY_la_SOURCES =
 nodist_libSalomeIDLCFDSTUDY_la_SOURCES = \
 	CFDSTUDY_GenSK.cc \
 	CFDSTUDY_GenDynSK.cc
-nodist_salomeinclude_HEADERS = CFDSTUDY_Gen.hh
 
 libSalomeIDLCFDSTUDY_la_CXXFLAGS = $(SALOME_INCLUDES) $(SALOME_GUI_CPPFLAGS) \
 	$(CORBA_CXXFLAGS) \
@@ -80,3 +82,4 @@ install-data-local: $(IDL_FILES)
 
 uninstall-local:
 	rm -rf $(DESTDIR)$(salomepythondir)/*
+
