@@ -81,7 +81,6 @@ from omniORB import CORBA
 # Salome modules
 #-------------------------------------------------------------------------------
 from omniORB import CORBA
-from SALOME_NamingServicePy import SALOME_NamingServicePy_i
 from LifeCycleCORBA import LifeCycleCORBA
 import SALOMEDS
 import SALOMEDS_Attributes_idl
@@ -305,13 +304,9 @@ def getORB():
 ###
 # Get naming service instance
 ###
-__naming_service__ = None
 def getNS():
-    global __naming_service__
-    if __naming_service__ is None:
-        __naming_service__ = SALOME_NamingServicePy_i( getORB() )
-        pass
-    return __naming_service__
+    import salome
+    return salome.naming_service
 
 #--------------------------------------------------------------------------
 ##

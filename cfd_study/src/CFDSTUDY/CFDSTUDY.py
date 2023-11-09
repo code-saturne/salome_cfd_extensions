@@ -42,10 +42,7 @@ class CFDSTUDY(CFDSTUDY_ORB__POA.CFDSTUDY_Gen,
 
     def __init__ ( self, orb, poa, contID, containerName, instanceName,
                    interfaceName ):
-        #print "CFDSTUDY.__init__: ", containerName, ';', instanceName
+        MESSAGE("CFDSTUDY.__init__: ", containerName, ';', instanceName)
         SALOME_ComponentPy.SALOME_ComponentPy_i.__init__(self, orb, poa,
                     contID, containerName, instanceName, interfaceName, False)
         SALOME_DriverPy.SALOME_DriverPy_i.__init__(self, interfaceName)
-        # On stocke dans l'attribut _naming_service, une reference sur
-        # le Naming Service CORBA
-        self._naming_service = SALOME_ComponentPy.SALOME_NamingServicePy_i( self._orb )
