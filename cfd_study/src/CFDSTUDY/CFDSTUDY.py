@@ -26,6 +26,8 @@ import CFDSTUDY_ORB__POA
 import SALOME_ComponentPy
 import SALOME_DriverPy
 
+from SALOME_utilities import *
+
 class CFDSTUDY(CFDSTUDY_ORB__POA.CFDSTUDY_Gen,
             SALOME_ComponentPy.SALOME_ComponentPy_i,
             SALOME_DriverPy.SALOME_DriverPy_i):
@@ -42,7 +44,7 @@ class CFDSTUDY(CFDSTUDY_ORB__POA.CFDSTUDY_Gen,
 
     def __init__ ( self, orb, poa, contID, containerName, instanceName,
                    interfaceName ):
-        MESSAGE("CFDSTUDY.__init__: ", containerName, ';', instanceName)
+        MESSAGE("CFDSTUDY.__init__: {};{}".format(containerName, instanceName))
         SALOME_ComponentPy.SALOME_ComponentPy_i.__init__(self, orb, poa,
                     contID, containerName, instanceName, interfaceName, False)
         SALOME_DriverPy.SALOME_DriverPy_i.__init__(self, interfaceName)
