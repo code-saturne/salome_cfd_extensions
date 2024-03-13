@@ -51,7 +51,7 @@ m4_define([cs_licence_c_comment],
 #       to be maintained properly (as it should be anyways).
 
 m4_define([salome_cfd_major_version], [8])
-m4_define([salome_cfd_minor_version], [1])
+m4_define([salome_cfd_minor_version], [0])
 m4_define([salome_cfd_release_version], [0])
 m4_define([salome_cfd_version_extra], [])
 m4_define([salome_cfd_version_string],
