@@ -60,7 +60,6 @@ build-aux/py-compile
 
 EXTRA_DIST = \
 $(AUX_DIST) \
-bin/salome_cfd.in \
 build-aux/list_salome_modules.py \
 m4/cs_omniorb.m4 \
 m4/cs_salome.m4 \
@@ -70,38 +69,3 @@ sbin/clean \
 sbin/rmb \
 config/cs_config_test.py\
 config/salome_module.mk
-
-DISTCLEANFILES = \
-bin/salome_cfd
-
-PYTHON_SHEBANG = /usr/bin/env python3
-
-# Replace paths in Python scripts.
-# The following command and target is adapted from an example in
-# autoconf. The autoconf documentation recommends changing scripts
-# through Makefile targets rather than through configure, and
-# cites its own automate and autoheader as examples.
-
-edit_package = sed \
-	-e 's|@salome_env_modules[@]|$(salome_env_modules)|g' \
-	-e 's|@SALOMEENVCMD[@]|$(SALOMEENVCMD)|g' \
-	-e 's|@PYTHON[@]|$(PYTHON_SHEBANG)|g' \
-	-e 's|@prefix[@]|$(prefix)|g' \
-	-e 's|@pythondir[@]|$(pythondir)|g' \
-	-e 's|@docdir[@]|$(docdir)|g' \
-	-e 's|@cs_root_dir[@]|$(CS_ROOT_DIR)|g'
-
-# Install Python library
-
-bin/salome_cfd: Makefile $(srcdir)/bin/salome_cfd.in
-	rm -f $@ $@.tmp
-	$(MKDIR_P) bin
-	srcdir=''; \
-	test -f ./$@.in || srcdir=$(srcdir)/; \
-	$(edit_package) $${srcdir}$@.in >$@.tmp
-	mv $@.tmp $@
-
-# Install binary scripts
-
-nodist_bin_SCRIPTS = \
-bin/salome_cfd

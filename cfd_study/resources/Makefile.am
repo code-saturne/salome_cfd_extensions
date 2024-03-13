@@ -29,6 +29,7 @@ MODULE_NAME = cfdstudy
 dist_salomeres_DATA = \
 CFDSTUDYCatalog.xml \
 SalomeApp.xml \
+SalomeAppSL.xml \
 CaseAdd.png \
 CaseEdit.png \
 CaseInProcess.png \

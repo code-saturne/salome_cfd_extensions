@@ -2,7 +2,7 @@ dnl-----------------------------------------------------------------------------
 dnl
 dnl This file is part of Code_Saturne, a general-purpose CFD tool.
 dnl
-dnl Copyright (C) 1998-2022 EDF S.A.
+dnl Copyright (C) 1998-2024 EDF S.A.
 dnl
 dnl This program is free software; you can redistribute it and/or modify it under
 dnl the terms of the GNU General Public License as published by the Free Software
@@ -102,6 +102,8 @@ if test "x$with_salome" != "xno" ; then
   unset salome_pre
   unset salome_env
 
+  salome_root_dir="${ROOT_SALOME}"
+  AC_ARG_VAR([salome_root_dir], [SALOME root directory])
   AC_ARG_VAR([SALOMEENVCMD], [SALOME environment setting commands])
 
 fi

@@ -4,7 +4,7 @@
 
 # This file is part of code_saturne, a general-purpose CFD tool.
 #
-# Copyright (C) 1998-2022 EDF S.A.
+# Copyright (C) 1998-2024 EDF S.A.
 #
 # This program is free software; you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -30,7 +30,7 @@ m4_define([cs_licence_c_comment],
 [/*
   This file is part of code_saturne, a general-purpose CFD tool.
 
-  Copyright (C) 1998-2022 EDF S.A.
+  Copyright (C) 1998-2024 EDF S.A.
 
   This program is free software; you can redistribute it and/or modify it under
   the terms of the GNU General Public License as published by the Free Software
@@ -50,10 +50,10 @@ m4_define([cs_licence_c_comment],
 # Note: proper determination of the version string requires the parent NEWS file
 #       to be maintained properly (as it should be anyways).
 
-m4_define([salome_cfd_major_version], [7])
-m4_define([salome_cfd_minor_version], [2])
+m4_define([salome_cfd_major_version], [8])
+m4_define([salome_cfd_minor_version], [1])
 m4_define([salome_cfd_release_version], [0])
-m4_define([salome_cfd_version_extra], [alpha])
+m4_define([salome_cfd_version_extra], [])
 m4_define([salome_cfd_version_string],
           [salome_cfd_major_version.salome_cfd_minor_version.salome_cfd_release_version@&t@salome_cfd_version_extra])
 
@@ -263,6 +263,22 @@ if test "x$CS_ROOT_DIR" != "x" ; then
     AC_MSG_WARN([directory specified by CS_ROOT_DIR does not exist])
   fi
 fi
+
+#------------------------------------------------------------------------------
+# Do we want to install files in salome/extra_env.d
+#------------------------------------------------------------------------------
+
+cfd_study_env_id=""
+
+AC_ARG_WITH(env_id,
+            [AS_HELP_STRING([--with-env-id=id],
+                            [install for salome/extra.env.d/<id>_s_cfd_study.*])],
+            [if test "x$withval" != "x"; then
+               cfd_study_env_id=$withval
+             fi],
+            [])
+
+AC_SUBST(cfd_study_env_id)
 
 #------------------------------------------------------------------------------
 # Pass compiler options to automake file

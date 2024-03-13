@@ -1,0 +1,19 @@
+# salome_cfd_extensions installation on base salome.
+# Associated code_saturne and salome_cfd installs may be outside of base salome install tree.
+
+if test -z ${SATURNE_ROOT_DIR} ; then
+  s_saturne_ROOT_INSTALL_DIR="@cs_root_dir@"
+  export SATURNE_ROOT_DIR=${s_saturne_ROOT_INSTALL_DIR}
+  export CS_ROOT_DIR=${s_saturne_ROOT_INSTALL_DIR}
+  export LD_LIBRARY_PATH=${s_saturne_ROOT_INSTALL_DIR}/lib:$LD_LIBRARY_PATH
+  export PATH=${s_saturne_ROOT_INSTALL_DIR}/bin:$PATH
+  export PYTHONPATH=${s_saturne_ROOT_INSTALL_DIR}/lib/python@python_version@/site-packages:$PYTHONPATH
+fi
+
+s_cfd_study_ROOT_INSTALL_DIR="@prefix@"
+export CFDSTUDY_ROOT_DIR=${s_cfd_study_ROOT_INSTALL_DIR}
+export CFDSTUDY_DIR=${s_cfd_study_ROOT_INSTALL_DIR}
+export LD_LIBRARY_PATH=${s_cfd_study_ROOT_INSTALL_DIR}/lib:$LD_LIBRARY_PATH
+export PYTHONPATH=${s_cfd_study_ROOT_INSTALL_DIR}/lib/python@python_version@/site-packages/salome:$PYTHONPATH
+export SALOME_MODULES=CFDSTUDY:$SALOME_MODULES
+export SalomeAppConfig=${s_cfd_study_ROOT_INSTALL_DIR}/share/salome/resources/cfdstudy:$SalomeAppConfig
