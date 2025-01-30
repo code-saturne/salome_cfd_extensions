@@ -1,0 +1,107 @@
+# - Config file for the @PROJECT_NAME@ package
+# It defines the following variables.
+# Specific to the pacakge @PROJECT_NAME@ itself:
+#  @PROJECT_NAME_UC@_ROOT_DIR_EXP - the root path of the installation providing this CMake file
+#
+
+# This file is part of code_saturne, a general-purpose CFD tool.
+#
+# Copyright (C) 1998-2025 EDF S.A.
+#
+# This program is free software; you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free Software
+# Foundation; either version 2 of the License, or (at your option) any later
+# version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+# details.
+#
+# You should have received a copy of the GNU General Public License along with
+# this program; if not, write to the Free Software Foundation, Inc., 51 Franklin
+# Street, Fifth Floor, Boston, MA 02110-1301, USA.
+
+### Initialisation performed by CONFIGURE_PACKAGE_CONFIG_FILE:
+@PACKAGE_INIT@
+
+
+# Package root dir:
+SET_AND_CHECK(CFDSTUDY_ROOT_DIR_EXP "@PACKAGE_CMAKE_INSTALL_PREFIX@")
+
+# Include directories
+SET_AND_CHECK(CFDSTUDY_INCLUDE_DIRS "${CFDSTUDY_ROOT_DIR_EXP}/@SALOME_INSTALL_HEADERS@")
+SET(CFDSTUDY_INCLUDE_DIRS "${CFDSTUDY_INCLUDE_DIRS};@_SalomeCFDSTUDY_EXTRA_HEADERS@")
+SET(CFDSTUDY_DEFINITIONS "@GUI_DEFINITIONS@")
+
+# Package specific environment variables
+@_SalomeCFDSTUDY_EXTRA_ENV_FULL@
+
+# Load the dependencies for the libraries of @PROJECT_NAME@
+# (contains definitions for IMPORTED targets). This is only
+# imported if we are not built as a subproject (in this case targets are already there)
+IF(NOT @PROJECT_NAME@_BINARY_DIR)
+  INCLUDE("${CFDSTUDY_ROOT_DIR_EXP}/${SALOME_INSTALL_CMAKE_LOCAL}/SalomeCFDSTUDYTargets.cmake")
+ENDIF()
+
+#### Now the specificities
+
+# Options exported by the package:
+SET(SALOME_CFDSTUDY_BUILD_TESTS @SALOME_BUILD_TESTS@)
+#SET(SALOME_CFDSTUDY_BUILD_DOC   @SALOME_BUILD_DOC@)
+
+# Level 1 prerequisites:
+SET_AND_CHECK(GUI_ROOT_DIR_EXP "@PACKAGE_GUI_ROOT_DIR@")
+
+# For all prerequisites, load the corresponding targets if the package was used
+# in CONFIG mode. This ensures dependent projects link correctly
+# without having to set LD_LIBRARY_PATH:
+SET(_PREREQ_@PROJECT_NAME@ @_PREREQ_LIST@)
+SET(_PREREQ_@PROJECT_NAME@_CONFIG_DIR @_PREREQ_DIR_LIST@)
+SET(_PREREQ_@PROJECT_NAME@_COMPONENTS "@_PREREQ_COMPO_LIST@")
+LIST(LENGTH _PREREQ_@PROJECT_NAME@_CONFIG_DIR _list_len_@PROJECT_NAME@)
+IF(NOT _list_len_@PROJECT_NAME@ EQUAL 0)
+  # Another CMake stupidity - FOREACH(... RANGE r) generates r+1 numbers ...
+  MATH(EXPR _range_@PROJECT_NAME@ "${_list_len_@PROJECT_NAME@}-1")
+  FOREACH(_p_@PROJECT_NAME@ RANGE ${_range_@PROJECT_NAME@})
+    LIST(GET _PREREQ_@PROJECT_NAME@            ${_p_@PROJECT_NAME@} _pkg_@PROJECT_NAME@    )
+    LIST(GET _PREREQ_@PROJECT_NAME@_CONFIG_DIR ${_p_@PROJECT_NAME@} _pkg_dir_@PROJECT_NAME@)
+    LIST(GET _PREREQ_@PROJECT_NAME@_COMPONENTS ${_p_@PROJECT_NAME@} _pkg_compo_@PROJECT_NAME@)
+    IF(NOT OMIT_DETECT_PACKAGE_${_pkg_@PROJECT_NAME@})
+      MESSAGE(STATUS "===> Reloading targets from ${_pkg_@PROJECT_NAME@} ...")
+      IF(NOT _pkg_compo_@PROJECT_NAME@)
+        FIND_PACKAGE(${_pkg_@PROJECT_NAME@} REQUIRED NO_MODULE
+            PATHS "${_pkg_dir_@PROJECT_NAME@}"
+            NO_DEFAULT_PATH)
+      ELSE()
+        STRING(REPLACE "," ";" _compo_lst_@PROJECT_NAME@ "${_pkg_compo_@PROJECT_NAME@}")
+        MESSAGE(STATUS "===> (components: ${_pkg_compo_@PROJECT_NAME@})")
+        FIND_PACKAGE(${_pkg_@PROJECT_NAME@} REQUIRED NO_MODULE
+            COMPONENTS ${_compo_lst_@PROJECT_NAME@}
+            PATHS "${_pkg_dir_@PROJECT_NAME@}"
+            NO_DEFAULT_PATH)
+      ENDIF()
+    ENDIF()
+  ENDFOREACH()
+ENDIF()
+
+# Installation directories
+SET(SALOME_INSTALL_BINS "@SALOME_INSTALL_BINS@")
+SET(SALOME_INSTALL_LIBS "@SALOME_INSTALL_LIBS@")
+SET(SALOME_INSTALL_HEADERS "@SALOME_INSTALL_HEADERS@")
+SET(SALOME_INSTALL_SCRIPT_SCRIPTS "@SALOME_INSTALL_SCRIPT_SCRIPTS@")
+SET(SALOME_INSTALL_SCRIPT_DATA "@SALOME_INSTALL_SCRIPT_DATA@")
+SET(SALOME_INSTALL_SCRIPT_PYTHON "@SALOME_INSTALL_SCRIPT_PYTHON@")
+SET(SALOME_INSTALL_APPLISKEL_SCRIPTS "@SALOME_INSTALL_APPLISKEL_SCRIPTS@")
+SET(SALOME_INSTALL_APPLISKEL_PYTHON "@SALOME_INSTALL_APPLISKEL_PYTHON@")
+SET(SALOME_INSTALL_CMAKE_LOCAL "@SALOME_INSTALL_CMAKE_LOCAL@")
+SET(SALOME_INSTALL_PYTHON "@SALOME_INSTALL_PYTHON@")
+SET(SALOME_INSTALL_PYTHON_SHARED "@SALOME_INSTALL_PYTHON_SHARED@")
+SET(SALOME_INSTALL_RES "@SALOME_INSTALL_RES@")
+SET(SALOME_INSTALL_DOC "@SALOME_INSTALL_DOC@")
+SET(SALOME_INSTALL_AMCONFIG_LOCAL "@SALOME_INSTALL_AMCONFIG_LOCAL@")
+
+# Include GUI targets if they were not already loaded:
+IF(NOT (TARGET Event))
+  INCLUDE("${GUI_ROOT_DIR_EXP}/${SALOME_INSTALL_CMAKE}/SalomeGUITargets.cmake")
+ENDIF()

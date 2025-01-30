@@ -1,7 +1,7 @@
 <!--
   This file is part of code_saturne, a general-purpose CFD tool.
 
-  Copyright (C) 1998-2024 EDF S.A.
+  Copyright (C) 1998-2025 EDF S.A.
 
   This program is free software; you can redistribute it and/or modify it under
   the terms of the GNU General Public License as published by the Free Software
@@ -25,23 +25,47 @@ Installation can be done independently of that of code_saturne, as only
 executing the installed modules requires than an actual build is present.
 It is usually done as a post-install step.
 
-It is based on GNU autotools, so the classical
-`configure && make && make install` paradigm may be used here.
-It is strongly recommended to build ouside the source tree (i.e. run
-`configure` from outside the source tree, in a dedicated build directory),
-and in-tree builds are not supported.
+------------------
+Basic Installation
+------------------
 
-To list available options, run `configure --help`
+The build procedure of the SALOME platform is implemented with CMake.
+In order to build the module you have to do the following actions:
 
-The path of a matching installation of code_saturne should be
-specified using the `CS_ROOT_DIR` variable, either
-specified when running `configure`, or defined as an environement
-variable at runtime. If both methods are used, the environment
-variable has priority over the initial configuration setting.
+1. Set up environment for pre-requisites
 
-The associated code_saturne installation may use different versions of some
-optional libraries, though using the same ones is usually recommended,
-and at least Python and PyQt (PyQt5) versions must match.
+SALOME provides the required environment to build new salome modules
+
+  ${INSTALL_SALOME}/salome shell
+
+2. Create a build directory:
+
+  rm -rf ${MOD_CFDSTUDY_BUILD}
+  mkdir ${MOD_CFDSTUDY_BUILD}
+  cd ${MOD_CFDSTUDY_BUILD}
+
+3. Configure the build procedure:
+
+  cd ${MOD_CFDSTUDY_BUILD}
+  cmake \
+  -S"${MOD_CFDSTUDY_SRC}" \
+  -B"${MOD_CFDSTUDY_BUILD}" \
+  -G"Unix Makefiles" \
+  -DCMAKE_INSTALL_PREFIX:PATH="${MOD_CFDSTUDY_INSTALL}" \
+  -DSALOME_BUILD_DOC="TRUE"
+ 
+
+   Note: by default (if CMAKE_INSTALL_PREFIX option is not given), SALOME CFDSTUDY
+   module will be configured for installation to the /usr directory that requires
+   root permissions to complete the installation.
+
+4. Build and install:
+
+   % make
+   % make install
+
+   This will install SALOME CFDSTUDY module to the <installation_directory>
+   specified on cmake command on the previous step.
 
 Installation directory structure
 --------------------------------

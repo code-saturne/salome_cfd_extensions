@@ -1,17 +1,6 @@
-# Patterns which git should ignore
-
-# git ls-files --others --exclude-from=.gitignore
-# Lines that start with '#' are comments.
-# For a project mostly in C, the following would be a good set of
-# exclude patterns (uncomment them if you want to use them):
-# *.[oa]
-# *~
-
-#-------------------------------------------------------------------------------
-
-# This file is part of Code_Saturne, a general-purpose CFD tool.
+# This file is part of code_saturne, a general-purpose CFD tool.
 #
-# Copyright (C) 1998-2022 EDF S.A.
+# Copyright (C) 1998-2025 EDF S.A.
 #
 # This program is free software; you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -27,5 +16,4 @@
 # this program; if not, write to the Free Software Foundation, Inc., 51 Franklin
 # Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-#-------------------------------------------------------------------------------
-
+SALOME_CONFIGURE_FILE(VERSION.in VERSION INSTALL ${SALOME_INSTALL_BINS})

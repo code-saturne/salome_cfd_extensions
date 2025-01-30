@@ -21,6 +21,8 @@ in the Salome platform, especially:
 * integration with OpenTURNS and the PERSALYS graphical interface for
   sensitivity studies.
 
+* See CFDSTUDYGUI/__init__.py to get and idea of the code structure.
+
 Copying
 =======
 
