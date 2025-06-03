@@ -16,5 +16,14 @@
 # this program; if not, write to the Free Software Foundation, Inc., 51 Franklin
 # Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-ADD_SUBDIRECTORY(CFDSTUDYGUI)
-ADD_SUBDIRECTORY(CFDSTUDYOTURNS)
+# --- scripts ---
+
+SET(_lib_SCRIPTS
+  CFDSTUDYOTURNS_DistantLauncher.py
+  CFDSTUDYOTURNS_LocalLauncher.py
+  CFDSTUDYOTURNS_StudyInterface.py
+)
+
+# --- rules ---
+
+SALOME_INSTALL_SCRIPTS("${_lib_SCRIPTS}" ${SALOME_INSTALL_PYTHON}/cfdstudy)
