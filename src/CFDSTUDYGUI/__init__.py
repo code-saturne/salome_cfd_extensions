@@ -38,6 +38,9 @@ The custom popup menu of the tree widget items are build depending on the curren
 CFDSTUDYGUI_SolverGUI.py
 The class CFDSTUDYGUI_SolverGUI provides an interface to the Solvers GUIs (Code Saturne / neptune_cfd). Only tested with Code_Saturne...
 
+CFDSTUDYOTURNS_StudyInterface.py
+Class used for an OpenTurns study within SALOME_CFD
+
 utilstudy.py
 The DumpMesh function explore the SALOME study to find a loaded mesh and all its groups which have an entry in the study
 """
