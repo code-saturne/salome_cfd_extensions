@@ -96,13 +96,13 @@ class cfd_openturns_study:
         new_launcher = None
 
         if self.run_type == 'local':
-            from CFDSTUDYOTURNS_LocalLauncher import cfd_openturns_local_launcher
+            from cfdstudy.CFDSTUDYOTURNS_LocalLauncher import cfd_openturns_local_launcher
 
             new_launcher = cfd_openturns_local_launcher(case_dir   = case_dir,
                                                         params_cfg = self.cfg,
                                                         package    = self.pkg)
         elif self.run_type == 'distant':
-            from CFDSTUDYOTURNS_DistantLauncher import CFDSTUDY_DistantLauncher
+            from cfdstudy.CFDSTUDYOTURNS_DistantLauncher import CFDSTUDY_DistantLauncher
 
             new_launcher = CFDSTUDY_DistantLauncher(case_dir   = case_dir,
                                                     params_cfg = self.cfg,
