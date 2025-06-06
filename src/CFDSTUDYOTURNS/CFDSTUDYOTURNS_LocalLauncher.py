@@ -100,7 +100,7 @@ class cfd_openturns_local_launcher:
 
         else:
             from code_saturne.base.cs_run import run as get_run_id
-            id_args = ['run', '--suggest-id']
+            id_args = ['--suggest-id']
 
             self.run_id = get_run_id(id_args, self.pkg)[1]
 
