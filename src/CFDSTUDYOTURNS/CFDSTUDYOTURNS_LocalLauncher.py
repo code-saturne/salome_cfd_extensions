@@ -67,7 +67,7 @@ class cfd_openturns_local_launcher:
     # --------------------------------------------------------------------------
     def launch(self, force_submit=False):
 
-        os.chdir(self.case_id)
+        os.chdir(self.case_dir)
 
         from code_saturne.base.cs_script import master_script
 
