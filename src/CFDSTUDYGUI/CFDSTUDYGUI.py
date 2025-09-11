@@ -19,7 +19,7 @@
 # --- should be done at the very first to avoid interference with logging.basicConfig() from code_saturne
 import logging
 from cfdstudy import initlog
-initlog.setDebug()
+initlog.setRelease()
 # ---
 
 from cfdstudy.clientgui import getClientGui

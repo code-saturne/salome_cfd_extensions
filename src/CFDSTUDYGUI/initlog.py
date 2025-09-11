@@ -9,7 +9,7 @@ warning = 30
 error = 40
 critical = 50
 
-loglevel = warning
+loglevel = error
 ch = None
 fh = None
 
