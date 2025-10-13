@@ -263,7 +263,7 @@ class CFDSTUDY_DistantLauncher:
 
             from code_saturne.base.cs_run import run as get_run_id
 
-            id_args = ['run', '--suggest-id']
+            id_args = ['--suggest-id']
             self.run_id = get_run_id(id_args, self.pkg)[1]
 
     # --------------------------------------------------------------------------
@@ -278,7 +278,7 @@ class CFDSTUDY_DistantLauncher:
         run_args = [self.package_name, 'run', '--stage',
                     '--id ', self.run_id,
                     '-p', self.paramfile]
-        f = open('prepare_cs_case.sh', 'wt')
+        f = open(os.path.join(self.case_dir, 'prepare_cs_case.sh'), 'wt')
 
         export_line = 'export PATH=' + self.host_bin_path + ':$PATH\n\n'
 
@@ -299,9 +299,10 @@ class CFDSTUDY_DistantLauncher:
         Creating the main run script.
         """
         run_args = [self.package_name, 'run', '-p', self.paramfile,
-                    '--initialize', '--finalize', '--id', self.run_id]
+                    '--initialize', '--finalize', '--no-stage',
+                    '--id', self.run_id]
 
-        f = open('run_cs_case.sh', 'wt')
+        f = open(os.path.join(self.case_dir, 'run_cs_case.sh'), 'wt')
 
         export_line = 'export PATH=' + self.host_bin_path + ':$PATH\n\n'
         f.write('# Ensure the correct command is found:\n')
