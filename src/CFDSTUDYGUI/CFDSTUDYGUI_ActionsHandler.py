@@ -158,11 +158,10 @@ SolverHelpAboutAction = 141
 # Help menu
 SolverHelpLicense = 251
 SolverHelpGuidesMenu = 260
-SolverHelpUserGuide = 261
+SolverHelpDoxygen = 261
 SolverHelpTutorial = 262
 SolverHelpTheory = 263
 SolverHelpRefcard = 264
-SolverHelpDoxygen = 265
 NCSolverHelpUserGuide = 266
 NCSolverHelpTutorial = 267
 NCSolverHelpTheory = 268
@@ -808,13 +807,13 @@ class CFDSTUDYGUI_ActionsHandler(QObject):
             "Code_Saturne and NEPTUNE_CFD Guides", self._SolverActionIdMap[SolverHelpMenu])
         self._HelpActionIdMap[SolverHelpGuidesMenu] = action_id
 
-        m = "Code_Saturne user guide"
-        action = sgPyQt.createAction(SolverHelpUserGuide, m, m, m)
+        m = "Code_Saturne doxygen"
+        action = sgPyQt.createAction(SolverHelpDoxygen, m, m, m)
         sgPyQt.createMenu(action, self._HelpActionIdMap[SolverHelpGuidesMenu])
         action_id = sgPyQt.actionId(action)
         self._ActionMap[action_id] = action
-        self._HelpActionIdMap[SolverHelpUserGuide] = action_id
-        action.triggered.connect(self.slotHelpUserGuide)
+        self._HelpActionIdMap[SolverHelpDoxygen] = action_id
+        action.triggered.connect(self.slotHelpDoxygen)
 
         m = "Code_Saturne tutorial"
         action = sgPyQt.createAction(SolverHelpTutorial, m, m, m)
@@ -839,14 +838,6 @@ class CFDSTUDYGUI_ActionsHandler(QObject):
         self._ActionMap[action_id] = action
         self._HelpActionIdMap[SolverHelpRefcard] = action_id
         action.triggered.connect(self.slotHelpRefcard)
-
-        m = "Code_Saturne doxygen"
-        action = sgPyQt.createAction(SolverHelpDoxygen, m, m, m)
-        sgPyQt.createMenu(action, self._HelpActionIdMap[SolverHelpGuidesMenu])
-        action_id = sgPyQt.actionId(action)
-        self._ActionMap[action_id] = action
-        self._HelpActionIdMap[SolverHelpDoxygen] = action_id
-        action.triggered.connect(self.slotHelpDoxygen)
 
         m = "NEPTUNE_CFD user guide"
         action = sgPyQt.createAction(NCSolverHelpUserGuide, m, m, m)
