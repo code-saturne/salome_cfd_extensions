@@ -203,3 +203,8 @@ IF(SALOME_BUILD_DOC)
   ADD_SUBDIRECTORY(doc)
 
 ENDIF()
+
+# tests
+
+install( FILES test/CFD0_OT.py test/tee_junction_ot.xml test/tee_junction.xml test/testSalomeCFD0.py DESTINATION tests )
+install( FILES test/CTestTestfileInstall.cmake DESTINATION tests RENAME CTestTestfile.cmake )
