@@ -47,8 +47,8 @@
     <boundary label="Symetry" name="3" nature="symmetry">ZMIN or ZMAX</boundary>
     <boundary label="Wall" name="4" nature="wall">WALL1 or WALL2 or WALL3 or WALL4 or WALL5</boundary>
     <inlet label="Inlet" field_id="none">
-      <scalar name="temperature" type="thermal" choice="dirichlet">
-        <dirichlet>300</dirichlet>
+      <scalar name="temperature" type="thermal" choice="dirichlet_formula">
+        <dirichlet_formula>temperature = Temp_IN;</dirichlet_formula>
       </scalar>
       <turbulence choice="hydraulic_diameter">
         <hydraulic_diameter>0.5</hydraulic_diameter>
@@ -121,7 +121,10 @@
       <gravity_y>0</gravity_y>
       <gravity_z>0</gravity_z>
     </gravity>
-    <notebook/>
+    <notebook>
+      <var id="0" name="Temp_IN" value="300.0" oturns="Yes: Input"/>
+      <var id="1" name="OUTPUT" value="0.0" oturns="Yes: Output" editable="Yes" log="Yes"/>
+    </notebook>
     <omega>
       <omega_x>0</omega_x>
       <omega_y>0</omega_y>

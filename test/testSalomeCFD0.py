@@ -223,6 +223,15 @@ def test1( debug = False ):
     3 - import current module
     4 - launch current func with debug = True
     5 - Launch CFD module and load simple_junction / case1
+
+    
+
+    code_saturne create -s simple_junction -c case1
+
+    ( git clone <saturne-tutorials_git_repo> && cp saturne-tutorials/12_Tee_Junction/MESH/mesh_T_junction.med simple_junction/MESH )
+
+    cp <loc_of_cfd_extensions>/salome_cfd_extensions/test/tee_junction_ot.xml simple_junction/case1/DATA/setup.xml
+
     """
     def checkOutputDirs( absMainDirName : Path, nbOfOutputDirExpected : int ):
         """
