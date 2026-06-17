@@ -51,6 +51,16 @@ SET(_lib_SCRIPTS
   utilstudy.py
 )
 
+if( CFD_STUDY_IS_FOR_EDF_USE )
+  set(URL_OF_CS_DOC "http://saturne-doc.retd.edf.fr/doc")
+else()
+  set(URL_OF_CS_DOC "https://www.code-saturne.org/cms/web/Documentation")
+endif()
+
+configure_file(CFDSTUDYGUI_Doc.py.in CFDSTUDYGUI_Doc.py @ONLY)
+
+install( FILES ${CMAKE_CURRENT_BINARY_DIR}/CFDSTUDYGUI_Doc.py
+         DESTINATION ${SALOME_INSTALL_PYTHON}/cfdstudy )
 
 # --- resources ---
 

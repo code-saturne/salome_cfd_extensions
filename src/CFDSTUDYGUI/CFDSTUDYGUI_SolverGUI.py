@@ -58,6 +58,7 @@ from code_saturne.gui.base.QtWidgets import *
 from .CFDSTUDYGUI_Commons import CFD_Code, CFD_Saturne, CFD_Neptune, getCFDSolverName, sgPyQt, sg
 from .CFDSTUDYGUI_Commons import LoggingMgr
 from . import CFDSTUDYGUI_DataModel
+from .CFDSTUDYGUI_Doc import getDocURL
 from .CFDSTUDYGUI_Management import CFDGUI_Management
 from .constants import col
 from code_saturne.base import cs_info
@@ -131,6 +132,31 @@ def findDockWindow(xmlName, caseName, studyCFDName):
 
     return bool_findDockWindow
 
+def checkURL(url: str, timeout: float = 5.0):
+    import logging
+    try:
+        import requests
+    except ImportError:
+        # no requests module : no check of URL
+        logging.getLogger().debug( f"requests module is not present. Unable to check URL {url}" )
+        return
+    try:
+        r = requests.head(url, allow_redirects=True, timeout=timeout)
+        if r.status_code == 405:
+            r = requests.get(url, stream=True, timeout=timeout)
+        r.raise_for_status()
+    except requests.RequestException as e:
+        raise RuntimeError(f"Unaccessible URL : {url}") from e
+
+def checkAndOpenURL( url ):
+    import logging
+    try:
+        checkURL( url )
+    except RuntimeError as e:
+        logging.getLogger().warning( str(e) )
+        return 
+    import webbrowser
+    webbrowser.open( url )
 
 # -------------------------------------------------------------------------------
 # Classes definition
@@ -344,29 +370,24 @@ class CFDSTUDYGUI_SolverGUI(QObject):
         cs_info.main(argv_info, package())
 
     def onSaturneHelpDoxygen(self):
-        from code_saturne.base.cs_package import package
-        argv_info = ['--guide', 'Doxygen']
-        cs_info.main(argv_info, package())
+        url_doc = getDocURL()
+        checkAndOpenURL( url_doc )
 
     def onNeptuneHelpManual(self):
-        from code_saturne.base.cs_package import package
-        argv_info = ['--guide', 'user']
-        cs_info.main(argv_info, package(name='neptune_cfd'))
+        url_doc = getDocURL()
+        checkAndOpenURL( url_doc )
 
     def onNeptuneHelpTutorial(self):
-        from code_saturne.base.cs_package import package
-        argv_info = ['--guide', 'tutorial']
-        cs_info.main(argv_info, package(name='neptune_cfd'))
+        url_doc = getDocURL()
+        checkAndOpenURL( url_doc )
 
     def onNeptuneHelpKernel(self):
-        from code_saturne.base.cs_package import package
-        argv_info = ['--guide', 'theory']
-        cs_info.main(argv_info, package(name='neptune_cfd'))
+        url_doc = "http://saturne-doc.retd.edf.fr/doc/dev/pdf/neptune_cfd/theory.html"
+        checkAndOpenURL( url_doc )
 
     def onNeptuneHelpDoxygen(self):
-        from code_saturne.base.cs_package import package
-        argv_info = ['--guide', 'Doxygen']
-        cs_info.main(argv_info, package(name='neptune_cfd'))
+        url_doc = getDocURL()
+        checkAndOpenURL( url_doc )
 
     def setWindowTitle_CFD(self, mw, caseTwi, baseTitleName):
         caseName = caseTwi.text(col.name)

@@ -27,6 +27,8 @@ CMAKE_POLICY(SET CMP0003 NEW)
 # Project name, upper case
 STRING(TOUPPER ${PROJECT_NAME} PROJECT_NAME_UC)
 
+option(CFD_STUDY_IS_FOR_EDF_USE "Specifies if build is intended for EDF use of not. OFF by default (meaning public by default)." OFF)
+
 SET(${PROJECT_NAME_UC}_MAJOR_VERSION 8)
 SET(${PROJECT_NAME_UC}_MINOR_VERSION 2)
 SET(${PROJECT_NAME_UC}_PATCH_VERSION 0)
