@@ -207,6 +207,13 @@ IF(SALOME_BUILD_DOC)
 ENDIF()
 
 # tests
+if(CFD_STUDY_IS_FOR_EDF_USE)
+  set( URL_OF_GIT_TUTORIALS "https://gitlab.pleiade.edf.fr/salome_cfd/vvuqe/saturne-tutorials" )
+else()
+  set( URL_OF_GIT_TUTORIALS "https://put_url_here" )
+endif()
 
-install( FILES test/CFD0_OT.py test/tee_junction_ot.xml test/tee_junction.xml test/testSalomeCFD0.py DESTINATION tests )
+configure_file(test/testSalomeCFD0.py.in testSalomeCFD0.py @ONLY)
+
+install( FILES test/CFD0_OT.py test/tee_junction_ot.xml test/tee_junction.xml ${CMAKE_CURRENT_BINARY_DIR}/testSalomeCFD0.py DESTINATION tests )
 install( FILES test/CTestTestfileInstall.cmake DESTINATION tests RENAME CTestTestfile.cmake )

@@ -27,7 +27,7 @@ import shutil
 import os
 
 def retrieveGitRepoForMEDFile():
-    return "https://gitlab.pleiade.edf.fr/salome_cfd/vvuqe/saturne-tutorials"
+    return "@URL_OF_GIT_TUTORIALS@"
 
 class TemporaryWorkingDirectory:
     def __enter__(self):
