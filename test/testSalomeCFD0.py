@@ -92,7 +92,7 @@ def retrieveMEDFile( dirName : Path ) -> Path:
 
             sp.check_output( [ "git", "checkout", saturne_tutorial_branch_name ] )
 
-        dirContainingMeshes = repoDir / "12_Tee_Junction" / "MESH"
+        dirContainingMeshes = repoDir / "01_Simple_Junction" / "MESH"
 
         dirs = [ elt for elt in dirContainingMeshes.iterdir() if elt.is_file() and elt.suffix == ".med" ]
 
@@ -327,11 +327,10 @@ def test1( debug = False ):
         ## yes inputs are not in [ 270, 320 ] of normal
         inps = centralTendency_0.getResult().getDesignOfExperiment().getInputSample()
         inps = [ inps[elt][0] for elt in range( inps.getSize() ) ]
-
-        # outputs are commented because values are nan !!! Why ???
-
-        #outps = centralTendency_0.getResult().getDesignOfExperiment().getOutputSample()
-        #outps = [ outps[elt][0] for elt in range( outps.getSize() ) ]
+        
+        # outputs are all set to 0. !!! Why ???
+        outps = centralTendency_0.getResult().getDesignOfExperiment().getOutputSample()
+        outps = [ outps[elt][0] for elt in range( outps.getSize() ) ]
 
 
 if __name__ == "__main__":

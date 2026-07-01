@@ -75,6 +75,7 @@
   </boundary_conditions>
   <calculation_management>
     <block_io/>
+    <logging main="stdout"/>
     <partitioning/>
     <start_restart>
       <frozen_field status="off"/>
@@ -135,7 +136,7 @@
     <joining/>
     <mesh_smoothing/>
     <meshes_list>
-      <mesh name="mesh_T_junction.med"/>
+      <mesh name="downcomer.med"/>
     </meshes_list>
     <periodicity/>
     <thin_walls/>
